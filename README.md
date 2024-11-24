@@ -13,7 +13,7 @@
 ### ratings.csv
 - userId: We assume that we can have multiple users
 - categoryId: The main category of tags used to generate the picture (we need integer type here)
-- rating: The rating that the user gave to the movie (1-10)
+- rating: The rating that the user gave to the picture (1-10)
 - tags: The tags that model used to generate the picture (separated by '|')
 
 ### categories.csv

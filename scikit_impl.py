@@ -64,7 +64,8 @@ class ScikitImpl:
             accuracy.rmse(predictions_test)
 
 
-    def get_top_n_recommendations(self, user_id, n=5):
+    def get_top_n_recommendations(self, user_id, n=10):
+        user_id = self.user_encoder.transform([user_id])[0]
         # Get all unique categories
         all_categories = self.ratings_df['categoryId'].unique()
 

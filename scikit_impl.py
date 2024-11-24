@@ -8,9 +8,15 @@ from sklearn.model_selection import train_test_split
 
 class ScikitImpl:
 
-    def __init__(self):
+    def __init__(self, debug=False):
+        self.debug = debug
         # Read the ratings data
         ratings_df = pd.read_csv("data/ratings.csv")
+
+        if self.debug:
+            # Display all columns in the output
+            pd.set_option('display.max_columns', None)
+            print(ratings_df)
 
         # Encode the userId and categoryId columns
         self.user_encoder = LabelEncoder()
@@ -47,15 +53,15 @@ class ScikitImpl:
         # model_knn = KNNBasic()
         # model_knn.fit(trainset)
 
-        # testset to test the model
-        testset = [(row['userId'], row['categoryId'], row['rating']) for _, row in test_df.iterrows()]
+        if self.debug:
+            # testset to test the model
+            testset = [(row['userId'], row['categoryId'], row['rating']) for _, row in test_df.iterrows()]
 
-        # Predict ratings for the testset
-        predictions_test = self.model_svd.test(testset)
+            # Predict ratings for the testset
+            predictions_test = self.model_svd.test(testset)
 
-        # Calculate RMSE on the test set, the lower the value the better, for 1-10 rating scale, we want RMSE to be less than 1 (1 point of rating)
-        rmse_test = accuracy.rmse(predictions_test)
-        print(f"RMSE on testset: {rmse_test}")
+            # Calculate RMSE on the test set, the lower the value the better, for 1-10 rating scale, we want RMSE to be less than 1 (1 point of rating)
+            accuracy.rmse(predictions_test)
 
 
     def get_top_n_recommendations(self, user_id, n=5):
@@ -70,6 +76,9 @@ class ScikitImpl:
 
         # Sort the predictions by estimated rating in descending order and get top n recommendations
         top_n_recommendations = sorted(predictions_cf, key=lambda x: x.est, reverse=True)[:n]
+
+        if self.debug:
+            print(top_n_recommendations)
 
         # Get the top n predicted ratings
         predicted_ratings = [pred.est for pred in top_n_recommendations]

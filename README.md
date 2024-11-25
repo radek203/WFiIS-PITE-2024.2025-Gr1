@@ -9,6 +9,17 @@
     pip3 install "numpy<2.0"
 ```
 
+### StableDiffusion3
+```bash
+    pip3 install diffusers
+    pip3 install transformers
+    pip3 install bitsandbytes
+    pip3 install accelerate
+    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+    pip3 install protobuf
+    pip3 install sentencepiece
+ ```
+
 ## How the data is structured
 ### ratings.csv
 - userId: We assume that we can have multiple users
@@ -25,14 +36,3 @@
 - Implement adding new users (id, name)
 - Implement generating e.g. 10 pictures with one click (not only one)
 - Generated images should contain best rated tags and tags that are not rated yet
-
-## StableDiffusin3 configuration
-```bash
-    pip3 install diffusers
-    pip3 install transformers
-    pip3 install bitsandbytes
-    pip3 install accelerate
-    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-    pip3 install protobuf
-    pip3 install sentencepiece
- ```

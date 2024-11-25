@@ -3,12 +3,15 @@ from diffusers import StableDiffusion3Pipeline
 from transformers import T5EncoderModel
 import torch
 
+
 class StableDiffusion:
+
     def __init__(self):
         self.model_id = "stabilityai/stable-diffusion-3.5-large-turbo"
-        self.pipeline = self.setupPipeline()
+        self.pipeline = self.setup_pipeline()
 
-    def setupPipeline(self):
+
+    def setup_pipeline(self):
         nf4_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_quant_type="fp4",
@@ -31,11 +34,12 @@ class StableDiffusion:
         pipeline.enable_model_cpu_offload()
         return pipeline
 
-    def generateImage(self, prompt):
+
+    def generate_image(self, prompt, filename):
         image = self.pipeline(
             prompt=prompt,
             num_inference_steps=4,
             guidance_scale=0.0,
             max_sequence_length=512,
         ).images[0]
-        image.save("./Images/test.png")
+        image.save("./Images/" + filename + ".png")

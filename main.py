@@ -10,7 +10,8 @@ def main():
     print(f"IDs: {ids}", f"Ratings: {ratings}")
 
     image_generator = StableDiffusion()
-    image_generator.generateImage("dachshund in the santa claus hat writing a python code on the computer")
+    image_generator.generate_image("dachshund in the santa claus hat writing a python code on the computer", "dachshund")
+
 
 if __name__ == '__main__':
     main()

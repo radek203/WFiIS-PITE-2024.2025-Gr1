@@ -9,7 +9,7 @@ class App:
 
     def create_image_container(self, parent):
         tile = parent.container()
-        tile.image("whimsical.png")
+        tile.image("placeholder.png")
         yes, no = tile.columns(2)
         yes.button("Like", key = self.KEY_ID)
         self.KEY_ID += 1

@@ -1,28 +1,44 @@
 import streamlit as st
-
+#from streamlit_extras.stylable_container import stylable_container
+import mock_backend_connection as mbc
 
 class App:
-
     def __init__(self):
         self.KEY_ID = 0
+        self.images = mbc.get_image_file_names()
 
-
+    def create_tabs(self):
+        tab1, tab2= st.tabs(["Tab 1", "Tab 2"])
+        with tab1:
+            st.header("Tab 1")
+        with tab2:
+            st.header("Tab 2")
+            
     def create_image_container(self, parent):
+        self.parent = parent
         tile = parent.container()
-        tile.image("streamlit_frontend/placeholder.png")
+        cur_filename = self.images 
+        tile.image(self.images) 
         yes, no = tile.columns(2)
-        yes.button("Like", key = self.KEY_ID)
+        yes.button("", key = self.KEY_ID, icon = "👍", use_container_width = True, on_click = mbc.like_callback, args=(str(cur_filename),))
         self.KEY_ID += 1
-        no.button("Dislike", key = self.KEY_ID)
+        no.button("", key = self.KEY_ID, icon = "👎", use_container_width = True, on_click = mbc.dislike_callback, args=(str(cur_filename),))
         self.KEY_ID += 1
-
 
     def create_layout(self):
         container = st.container(border=True)
-        container.write("Welcome!")
+        container.write("Welcome! Please click 👍 if you like the image and if it is not what you are looking for click 👎. Remember there are two tabs to choose from. Based on your opinion app will generate image for you!")
         layout = st.container(border = True)
         row1 = layout.columns(3)
         row2 = layout.columns(3)
         row3 = layout.columns(3)
         for col in row1 + row2 + row3:
             self.create_image_container(col)
+            
+if __name__ == '__main__':
+    app = App()
+    app.create_tabs()
+    app.create_layout()
+
+
+    

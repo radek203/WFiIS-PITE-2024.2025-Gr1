@@ -1,11 +1,12 @@
 import streamlit as st
-#from streamlit_extras.stylable_container import stylable_container
 import mock_backend_connection as mbc
 
 class App:
+
     def __init__(self):
         self.KEY_ID = 0
         self.images = mbc.get_image_file_names()
+
 
     def create_tabs(self):
         tab1, tab2= st.tabs(["Tab 1", "Tab 2"])
@@ -13,9 +14,9 @@ class App:
             st.header("Tab 1")
         with tab2:
             st.header("Tab 2")
-            
+
+
     def create_image_container(self, parent):
-        self.parent = parent
         tile = parent.container()
         cur_filename = self.images 
         tile.image(self.images) 
@@ -24,6 +25,7 @@ class App:
         self.KEY_ID += 1
         no.button("", key = self.KEY_ID, icon = "👎", use_container_width = True, on_click = mbc.dislike_callback, args=(str(cur_filename),))
         self.KEY_ID += 1
+
 
     def create_layout(self):
         container = st.container(border=True)
@@ -34,11 +36,3 @@ class App:
         row3 = layout.columns(3)
         for col in row1 + row2 + row3:
             self.create_image_container(col)
-            
-if __name__ == '__main__':
-    app = App()
-    app.create_tabs()
-    app.create_layout()
-
-
-    

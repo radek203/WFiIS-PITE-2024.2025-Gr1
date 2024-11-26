@@ -45,4 +45,4 @@
 - Generated images should contain best rated tags and tags that are not rated yet
   
 ## Running app
-- From inside streamlit_frontend directory run "streamlit run main.py"
+- From inside main directory run "streamlit run main.py"

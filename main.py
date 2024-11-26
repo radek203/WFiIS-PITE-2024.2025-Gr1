@@ -1,9 +1,13 @@
 from scikit_impl import ScikitImpl
 from stablediffusion import StableDiffusion
+from streamlit_frontend.app_layout import App
 
 
 def main():
     print("Welcome to the program!")
+    app = App()
+    app.create_layout()
+
     scikit = ScikitImpl(True)
     scikit.train()
     ids, ratings = scikit.get_top_n_recommendations(1, 3)

@@ -10,7 +10,6 @@ class App:
         tile.image("whimsical.png")
         yes, no = tile.columns(2)
         yes.button("Like", key = self.KEY_ID)
-        #onclick poczytaj zeby dostalo key_id uzyte tu konkretnie
         self.KEY_ID += 1
         no.button("Dislike", key = self.KEY_ID)
         self.KEY_ID += 1

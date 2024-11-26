@@ -1,5 +1,5 @@
 import streamlit as st
-import mock_backend_connection as mbc
+import streamlit_frontend.mock_backend_connection as mbc
 
 class App:
 

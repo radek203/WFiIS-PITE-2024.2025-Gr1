@@ -29,7 +29,7 @@
 
 ## Running app
 - From inside main directory run
-```bash 
+```bash
     streamlit run main.py
  ```
 

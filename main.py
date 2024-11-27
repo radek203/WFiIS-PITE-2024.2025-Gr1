@@ -1,7 +1,8 @@
+import streamlit as st
 from scikit_impl import ScikitImpl
 from stablediffusion import StableDiffusion
 from streamlit_frontend.app_layout import App
-import streamlit as st
+
 
 def main():
     print("Welcome to the program!")

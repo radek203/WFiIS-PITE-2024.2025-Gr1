@@ -1,9 +1,9 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder, MultiLabelBinarizer
 from surprise import Dataset, Reader
 from surprise import SVD
 from surprise import accuracy
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder, MultiLabelBinarizer
-from sklearn.model_selection import train_test_split
 
 
 class ScikitImpl:
@@ -30,7 +30,6 @@ class ScikitImpl:
 
         # Model based on the SVD Singular Value Decomposition algorithm
         self.model_svd = SVD()
-
 
     # This function doesn't contain final implementation of choosing categories/tags!
     def train(self):
@@ -62,7 +61,6 @@ class ScikitImpl:
 
             # Calculate RMSE on the test set, the lower the value the better, for 1-10 rating scale, we want RMSE to be less than 1 (1 point of rating)
             accuracy.rmse(predictions_test)
-
 
     def get_top_n_recommendations(self, user_id, n=10):
         user_id = self.user_encoder.transform([user_id])[0]

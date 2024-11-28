@@ -22,6 +22,17 @@
     pip3 install sentencepiece
  ```
 
+### Streamlit
+```bash
+    pip3 install streamlit
+ ```
+
+## Running app
+- From inside main directory run
+```bash
+    streamlit run main.py
+ ```
+
 ## How the data is structured
 ### ratings.csv
 - userId: We assume that we can have multiple users
@@ -38,3 +49,4 @@
 - Implement adding new users (id, name)
 - Implement generating e.g. 10 pictures with one click (not only one)
 - Generated images should contain best rated tags and tags that are not rated yet
+- Add a loading screen when the models are initialising (on the app start)

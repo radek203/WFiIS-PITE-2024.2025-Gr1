@@ -1,7 +1,7 @@
+import torch
 from diffusers import BitsAndBytesConfig, SD3Transformer2DModel
 from diffusers import StableDiffusion3Pipeline
 from transformers import T5EncoderModel
-import torch
 
 
 class StableDiffusion:
@@ -9,7 +9,6 @@ class StableDiffusion:
     def __init__(self):
         self.model_id = "stabilityai/stable-diffusion-3.5-large-turbo"
         self.pipeline = self.setup_pipeline()
-
 
     def setup_pipeline(self):
         nf4_config = BitsAndBytesConfig(
@@ -33,7 +32,6 @@ class StableDiffusion:
         )
         pipeline.enable_model_cpu_offload()
         return pipeline
-
 
     def generate_image(self, prompt, filename):
         image = self.pipeline(

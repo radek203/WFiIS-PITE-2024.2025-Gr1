@@ -7,12 +7,27 @@ from transformers import T5EncoderModel
 
 class StableDiffusion:
 
-    def __init__(self):
+    def __init__(self, debug=False):
         self.model_id = "stabilityai/stable-diffusion-3.5-large-turbo"
         self.pipeline = self.setup_pipeline()
-        self.adjectives = pd.read_csv("data/adjectives.csv")
+        self.adjectives = pd.read_csv("data/adjectives.csv").iloc[0:(20 if debug else 100)]
         self.categories = pd.read_csv("data/categories.csv")
-        self.tags = [pd.read_csv("data/cat" + str(i) + ".csv") for i in range(1, len(self.categories) + 1)]
+        self.tags = [pd.read_csv("data/cat" + str(i) + ".csv").iloc[0:(20 if debug else 100)] for i in range(1, len(self.categories) + 1)]
+
+    def get_random_adjectives(self, n):
+        return self.adjectives.sample(n)
+
+    def get_random_tags(self, n):
+        category = self.categories.sample(1)
+        return self.tags[int(category.iloc[0]["id"]) - 1].sample(n)
+
+    def generate_random_prompt(self, n):
+        adjectives = self.get_random_adjectives(n)
+        tags = self.get_random_tags(n)
+        prompts = []
+        for i in range(n):
+            prompts.append(adjectives.iloc[i].values[0] + " " + tags.iloc[i].values[0])
+        return prompts
 
     def setup_pipeline(self):
         nf4_config = BitsAndBytesConfig(

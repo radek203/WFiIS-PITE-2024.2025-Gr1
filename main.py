@@ -15,10 +15,10 @@ def main():
     print(f"IDs: {ids}", f"Ratings: {ratings}")
 
     if 'image_generator' not in st.session_state:
-        st.session_state['image_generator'] = StableDiffusion()
+        st.session_state['image_generator'] = StableDiffusion(True)
 
-    st.session_state['image_generator'].generate_image("dachshund in the santa claus hat writing a python code on the computer", "dachshund")
-    st.session_state['image_generator'].generate_image("Big white cat in santa clauss hat", "cat")
+    for prompt in st.session_state['image_generator'].generate_random_prompt(3):
+        st.session_state['image_generator'].generate_image(prompt, prompt.replace(" ", "_"))
 
 
 if __name__ == '__main__':

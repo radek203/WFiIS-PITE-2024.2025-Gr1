@@ -1,4 +1,5 @@
 import torch
+import pandas as pd
 from diffusers import BitsAndBytesConfig, SD3Transformer2DModel
 from diffusers import StableDiffusion3Pipeline
 from transformers import T5EncoderModel
@@ -9,6 +10,9 @@ class StableDiffusion:
     def __init__(self):
         self.model_id = "stabilityai/stable-diffusion-3.5-large-turbo"
         self.pipeline = self.setup_pipeline()
+        self.adjectives = pd.read_csv("data/adjectives.csv")
+        self.categories = pd.read_csv("data/categories.csv")
+        self.tags = [pd.read_csv("data/cat" + str(i) + ".csv") for i in range(1, len(self.categories) + 1)]
 
     def setup_pipeline(self):
         nf4_config = BitsAndBytesConfig(

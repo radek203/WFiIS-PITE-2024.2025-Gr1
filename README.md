@@ -5,6 +5,8 @@
 ## How to setup the environment
 You need to have Build Tools installed on your machine. https://visualstudio.microsoft.com/pl/visual-cpp-build-tools/
 
+#### All commands can be run without 'python -m' prefix, but it is recommended to use it to avoid any conflicts with other Python installations.
+
 ### It is recommended to update pip before installing any packages
 ```bash
     python -m pip install --upgrade pip
@@ -44,7 +46,7 @@ You need to have Build Tools installed on your machine. https://visualstudio.mic
 ## Running app
 - From inside main directory run
 ```bash
-    streamlit run main.py
+    python -m streamlit run main.py
  ```
 
 ## How the data is structured

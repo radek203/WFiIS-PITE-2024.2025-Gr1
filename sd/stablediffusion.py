@@ -59,4 +59,4 @@ class StableDiffusion:
             guidance_scale=0.0,
             max_sequence_length=512,
         ).images[0]
-        image.save("./Images/" + filename + ".png")
+        image.save("images/" + filename + ".png")

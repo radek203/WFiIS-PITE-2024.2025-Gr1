@@ -1,7 +1,7 @@
 import streamlit as st
-from scikit_impl import ScikitImpl
-from stablediffusion import StableDiffusion
-from streamlit_frontend.app_layout import App
+from scikit.scikit_impl import ScikitImpl
+from sd.stablediffusion import StableDiffusion
+from frontend.app_layout import App
 
 
 def main():

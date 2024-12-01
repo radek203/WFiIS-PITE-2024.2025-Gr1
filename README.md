@@ -1,6 +1,7 @@
 ### This project is only compatible with Windows.
 ### Project is created using Python 3.12.7, and you need to have it installed on your machine.
 #### Newer versions of Python might not work with dependencies. You need to check it by yourself.
+#### Please run project using administrator privileges and without any virtual environments.
 
 ## How to setup the environment
 You need to have Build Tools installed on your machine. https://visualstudio.microsoft.com/pl/visual-cpp-build-tools/

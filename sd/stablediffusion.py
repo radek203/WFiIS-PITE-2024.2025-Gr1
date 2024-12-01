@@ -2,17 +2,24 @@ import pandas as pd
 import torch
 from diffusers import BitsAndBytesConfig, SD3Transformer2DModel
 from diffusers import StableDiffusion3Pipeline
+from enum import Enum
 from transformers import T5EncoderModel
+
+
+class ImageModel(Enum):
+    SD35LT = "stabilityai/stable-diffusion-3.5-large-turbo"
+    SD35L = "stabilityai/stable-diffusion-3.5-large"
+    SD3MD = "stabilityai/stable-diffusion-3-medium-diffusers"
 
 
 class StableDiffusion:
 
-    def __init__(self, turbo=True, debug=False):
-        self.model_id = "stabilityai/stable-diffusion-3.5-large-turbo" if turbo else "stabilityai/stable-diffusion-3.5-large"
+    def __init__(self, model=ImageModel.SD35LT, test=False):
+        self.model_id = model.value
         self.pipeline = self.setup_pipeline()
-        self.adjectives = pd.read_csv("data/adjectives.csv").iloc[0:(20 if debug else 100)]
+        self.adjectives = pd.read_csv("data/adjectives.csv").iloc[0:(10 if test else 100)]
         self.categories = pd.read_csv("data/categories.csv")
-        self.tags = [pd.read_csv("data/cat" + str(i) + ".csv").iloc[0:(20 if debug else 100)] for i in range(1, len(self.categories) + 1)]
+        self.tags = [pd.read_csv("data/cat" + str(i) + ".csv").iloc[0:(10 if test else 100)] for i in range(1, len(self.categories) + 1)]
 
     def get_random_adjectives(self, n):
         return self.adjectives.sample(n)

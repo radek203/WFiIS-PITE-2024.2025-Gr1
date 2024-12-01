@@ -15,7 +15,7 @@ def main():
     print(f"IDs: {ids}", f"Ratings: {ratings}")
 
     if 'image_generator' not in st.session_state:
-        st.session_state['image_generator'] = StableDiffusion(True)
+        st.session_state['image_generator'] = StableDiffusion(True, True)
 
     for prompt in st.session_state['image_generator'].generate_random_prompt(3):
         st.session_state['image_generator'].generate_image(prompt, prompt.replace(" ", "_"))

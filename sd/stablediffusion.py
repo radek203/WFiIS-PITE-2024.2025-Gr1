@@ -7,8 +7,8 @@ from transformers import T5EncoderModel
 
 class StableDiffusion:
 
-    def __init__(self, debug=False):
-        self.model_id = "stabilityai/stable-diffusion-3.5-large-turbo"
+    def __init__(self, turbo=True, debug=False):
+        self.model_id = "stabilityai/stable-diffusion-3.5-large-turbo" if turbo else "stabilityai/stable-diffusion-3.5-large"
         self.pipeline = self.setup_pipeline()
         self.adjectives = pd.read_csv("data/adjectives.csv").iloc[0:(20 if debug else 100)]
         self.categories = pd.read_csv("data/categories.csv")

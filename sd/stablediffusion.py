@@ -52,11 +52,11 @@ class StableDiffusion:
         pipeline.enable_model_cpu_offload()
         return pipeline
 
-    def generate_image(self, prompt, filename, steps=24):
+    def generate_image(self, prompt, img_id, steps=24):
         image = self.pipeline(
             prompt=prompt,
             num_inference_steps=steps,
             guidance_scale=4.5,
             max_sequence_length=512,
         ).images[0]
-        image.save("images/" + filename + ".png")
+        image.save("images/image" + img_id + ".png")

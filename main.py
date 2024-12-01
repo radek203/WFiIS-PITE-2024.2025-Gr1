@@ -1,5 +1,5 @@
 import streamlit as st
-from scikit.scikit_impl import ScikitImpl
+from backend.scikit_impl import ScikitImpl
 from sd.stablediffusion import StableDiffusion
 from frontend.app_layout import App
 
@@ -17,9 +17,10 @@ def main():
     if 'image_generator' not in st.session_state:
         st.session_state['image_generator'] = StableDiffusion(True, True)
 
+    i = 0 # We need to load here last image id, and only after generating images show them to user
     for prompt in st.session_state['image_generator'].generate_random_prompt(3):
-        st.session_state['image_generator'].generate_image(prompt, prompt.replace(" ", "_"))
-
+        st.session_state['image_generator'].generate_image(prompt, i)
+        i += 1
 
 if __name__ == '__main__':
     main()

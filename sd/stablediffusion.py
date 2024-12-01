@@ -1,5 +1,5 @@
-import torch
 import pandas as pd
+import torch
 from diffusers import BitsAndBytesConfig, SD3Transformer2DModel
 from diffusers import StableDiffusion3Pipeline
 from transformers import T5EncoderModel
@@ -52,11 +52,11 @@ class StableDiffusion:
         pipeline.enable_model_cpu_offload()
         return pipeline
 
-    def generate_image(self, prompt, filename):
+    def generate_image(self, prompt, filename, steps=24):
         image = self.pipeline(
             prompt=prompt,
-            num_inference_steps=4,
-            guidance_scale=0.0,
+            num_inference_steps=steps,
+            guidance_scale=4.5,
             max_sequence_length=512,
         ).images[0]
         image.save("images/" + filename + ".png")

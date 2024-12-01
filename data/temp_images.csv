@@ -1,10 +1,10 @@
-file_name,tags
-placeholder0,waterfall|forest|trees|rainbow
-placeholder1,lake|reflection|forest|mist
-placeholder2,mountain|river|sunrise|autumn
-placeholder3,ocean|beach|palms|sunset
-placeholder4,desert|dunes|rock|sand
-placeholder5,castle|tower|gothic|ruins
-placeholder6,bridge|cathedral|modern|windows
-placeholder7,skyscraper|glass|daylight|city
-placeholder8,industrial|factory|smoke|night
+file_name,tags,categoryId
+placeholder0,waterfall|forest|trees|rainbow, 1
+placeholder1,lake|reflection|forest|mist, 1
+placeholder2,mountain|river|sunrise|autumn, 1
+placeholder3,ocean|beach|palms|sunset, 1
+placeholder4,desert|dunes|rock|sand, 1
+placeholder5,castle|tower|gothic|ruins, 2
+placeholder6,bridge|cathedral|modern|windows, 2
+placeholder7,skyscraper|glass|daylight|city, 2
+placeholder8,industrial|factory|smoke|night, 2

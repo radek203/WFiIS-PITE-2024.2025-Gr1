@@ -17,8 +17,8 @@ class App:
 
     def create_image_container(self, parent):
         tile = parent.container()
-        cur_filename = self.images
-        tile.image(self.images)
+        cur_filename = next(self.images)
+        tile.image(cur_filename)
         yes, no = tile.columns(2)
         yes.button("", key=self.KEY_ID, icon="👍", use_container_width=True, on_click=mbc.like_callback, args=(str(cur_filename),))
         self.KEY_ID += 1

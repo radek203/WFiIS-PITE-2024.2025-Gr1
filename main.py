@@ -1,6 +1,6 @@
 import streamlit as st
 from backend.scikit_impl import ScikitImpl
-from sd.stablediffusion import StableDiffusion, ImageModel
+from backend.stablediffusion import StableDiffusion, ImageModel
 from frontend.app_layout import App
 
 

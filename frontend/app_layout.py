@@ -4,7 +4,7 @@ import backend.callbacks as mbc
 
 class App:
     st.session_state['is_image_generate'] = {0: False, 1: False, 2: False}
-    st.session_state['image_path'] = {0: None, 1: None, 2: None}
+    st.session_state['image_data'] = {0: [None, 0, 0, ''], 1: [None, 0, 0, ''], 2: [None, 0, 0, '']}
     def __init__(self):
         self.KEY_ID = 0
         # We need to link this with generating images to get generated images data - id, user_id, category_id, tags
@@ -22,18 +22,18 @@ class App:
     def create_image_container(self, parent,place_id):
         tile = parent.container()
         i = mbc.get_number_of_rows() + 1
-        if(st.session_state['is_image_generate'][place_id]==False):
+        if not st.session_state['is_image_generate'][place_id]:
             tile.write("Generate image")
             prompt = st.session_state['image_generator'].generate_random_prompt(1)
             st.session_state['image_generator'].generate_image(prompt, i)
             st.session_state['is_image_generate'][place_id] = True
-            cur_filename, user_id, category_id, tags = mbc.get_image_data(i)
-            st.session_state['image_path'][place_id] = cur_filename
-        tile.image(st.session_state['image_path'][place_id])
+            st.session_state['image_data'][place_id] = mbc.get_image_data(i)
+        img_data = st.session_state['image_data'][place_id]
+        tile.image(img_data[0])
         yes, no = tile.columns(2)
-        yes.button("", key=self.KEY_ID, icon="👍", use_container_width=True, on_click=mbc.like_callback, args=(st.session_state['image_path'][place_id], 1, 1, 1))
+        yes.button("", key=self.KEY_ID, icon="👍", use_container_width=True, on_click=mbc.like_callback, args=(img_data[0], img_data[1], img_data[2], img_data[3]))
         self.KEY_ID += 1
-        no.button("", key=self.KEY_ID, icon="👎", use_container_width=True, on_click=mbc.dislike_callback, args=(st.session_state['image_path'][place_id], 1, 1, 1))
+        no.button("", key=self.KEY_ID, icon="👎", use_container_width=True, on_click=mbc.dislike_callback, args=(img_data[0], img_data[1], img_data[2], img_data[3]))
         self.KEY_ID += 1
 
     def create_layout(self):

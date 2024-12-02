@@ -1,9 +1,8 @@
 import pandas as pd
 
+def get_image_data(i):
+    return [f"images/image{i}.png", 1, 1, "tag1|tag2|tag3"]
 
-def get_image_data(ids):
-    for i in ids:
-        yield [f"images/image{i}.png", 1, 1, "tag1|tag2|tag3"]
 
 def like_callback(file_name, user_id, category_id, tags):
     new_row = {

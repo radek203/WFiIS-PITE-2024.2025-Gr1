@@ -18,11 +18,12 @@ def main():
 
     if 'image_generator' not in st.session_state:
         st.session_state['image_generator'] = StableDiffusion(ImageModel.SD35LT, True)
+        st.rerun()
 
-    i = get_number_of_rows() + 1
-    for prompt in st.session_state['image_generator'].generate_random_prompt(3):
-        st.session_state['image_generator'].generate_image(prompt, i)
-        i += 1
+    # i = get_number_of_rows() + 1
+    # for prompt in st.session_state['image_generator'].generate_random_prompt(3):
+    #     st.session_state['image_generator'].generate_image(prompt, i)
+    #     i += 1
 
 if __name__ == '__main__':
     main()

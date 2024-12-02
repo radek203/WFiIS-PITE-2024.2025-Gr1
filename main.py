@@ -1,8 +1,8 @@
 import streamlit as st
 
-from backend.callbacks import get_number_of_rows
+from backend.models import ImageModelSD3MD, ImageModelSDXL1, ImageModelSD35LT, ImageModelSD35L
 from backend.scikit_impl import ScikitImpl
-from backend.stablediffusion import StableDiffusion, ImageModel
+from backend.stablediffusion import StableDiffusion
 from frontend.app_layout import App
 
 
@@ -17,13 +17,8 @@ def main():
     print(f"IDs: {ids}", f"Ratings: {ratings}")
 
     if 'image_generator' not in st.session_state:
-        st.session_state['image_generator'] = StableDiffusion(ImageModel.SD35LT, True)
+        st.session_state['image_generator'] = StableDiffusion(ImageModelSD35LT(), True)
         st.rerun()
-
-    # i = get_number_of_rows() + 1
-    # for prompt in st.session_state['image_generator'].generate_random_prompt(3):
-    #     st.session_state['image_generator'].generate_image(prompt, i)
-    #     i += 1
 
 if __name__ == '__main__':
     main()

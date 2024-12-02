@@ -3,13 +3,14 @@ import backend.callbacks as mbc
 
 
 class App:
-    st.session_state['is_image_generate'] = {0: False, 1: False, 2: False}
+
+    st.session_state['is_image_generate'] = {0: False, 1: False, 2: False, 3: False, 4: False, 5: False, 6: False, 7: False, 8: False}
     st.session_state['image_data'] = {0: [None, 0, 0, ''], 1: [None, 0, 0, ''], 2: [None, 0, 0, '']}
+    st.session_state['last_id'] = 0
+
     def __init__(self):
         self.KEY_ID = 0
-        # We need to link this with generating images to get generated images data - id, user_id, category_id, tags
-        # self.images = mbc.get_image_data([0,1,2])
-
+        st.session_state['last_id'] = mbc.get_number_of_rows()
 
 
     def create_tabs(self):
@@ -21,13 +22,14 @@ class App:
 
     def create_image_container(self, parent,place_id):
         tile = parent.container()
-        i = mbc.get_number_of_rows() + 1
+        i = st.session_state['last_id'] + 1
         if not st.session_state['is_image_generate'][place_id]:
             tile.write("Generate image")
             prompt = st.session_state['image_generator'].generate_random_prompt(1)
             st.session_state['image_generator'].generate_image(prompt, i)
             st.session_state['is_image_generate'][place_id] = True
             st.session_state['image_data'][place_id] = mbc.get_image_data(i)
+            st.session_state['last_id'] = i
         img_data = st.session_state['image_data'][place_id]
         tile.image(img_data[0])
         yes, no = tile.columns(2)
@@ -44,10 +46,9 @@ class App:
             layout.write("Loading Image Generator...")
         else:
             row1 = layout.columns(3)
-            #row2 = layout.columns(3)
-            #row3 = layout.columns(3)
-            #for col in row1 + row2 + row3:
+            row2 = layout.columns(3)
+            row3 = layout.columns(3)
             place_id = 0
-            for col in row1:
-                self.create_image_container(col,place_id)
+            for col in row1 + row2 + row3:
+                self.create_image_container(col, place_id)
                 place_id += 1

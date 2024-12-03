@@ -7,11 +7,11 @@ def get_image_data(i):
     return [f"images/image{i}.png", config['user_id'], 1, "tag1|tag2|tag3"]
 
 
-def like_callback(file_name, user_id, category_id, tags):
+def like_callback(file_name, user_id,ratings, category_id, tags):
     new_row = {
         "userId": user_id,
         "categoryId": category_id,
-        "rating": 10,
+        "rating": ratings,
         "tags": tags
     }
     save_row_to_file(new_row)

@@ -23,8 +23,9 @@ class StableDiffusion:
         prompts = []
         for i in range(n):
             prompts.append(adjectives.iloc[i].values[0] + " " + tags.iloc[i].values[0])
-        return prompts
+        return prompts, tags
 
     def generate_image(self, prompt, img_id, steps=10):
         image = self.model.generate_image(prompt, steps)
         image.save("images/image" + str(img_id) + ".png")
+

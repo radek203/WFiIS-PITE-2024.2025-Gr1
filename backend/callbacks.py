@@ -1,7 +1,10 @@
 import pandas as pd
 
+from config import config
+
+
 def get_image_data(i):
-    return [f"images/image{i}.png", 1, 1, "tag1|tag2|tag3"]
+    return [f"images/image{i}.png", config['user_id'], 1, "tag1|tag2|tag3"]
 
 
 def like_callback(file_name, user_id, category_id, tags):

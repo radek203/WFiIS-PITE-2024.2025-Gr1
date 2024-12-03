@@ -10,7 +10,6 @@ from frontend.app_layout import App
 def main():
     print("Welcome to the program!")
     app = App()
-    # app.create_tabs()
     app.create_layout()
     scikit = ScikitImpl(config['debug'])
     scikit.train()

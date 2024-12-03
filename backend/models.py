@@ -149,4 +149,3 @@ class ImageModelSDXL1(ImageModel):
             image=image,
         ).images[0]
         return image
-

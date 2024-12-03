@@ -1,9 +1,9 @@
 import streamlit as st
+
 import backend.callbacks as mbc
 
 
 class App:
-
     st.session_state['is_image_generate'] = {0: False, 1: False, 2: False, 3: False, 4: False, 5: False, 6: False, 7: False, 8: False}
     st.session_state['image_data'] = {0: [None, 0, 0, ''], 1: [None, 0, 0, ''], 2: [None, 0, 0, '']}
     st.session_state['last_id'] = 0
@@ -12,7 +12,6 @@ class App:
         self.KEY_ID = 0
         st.session_state['last_id'] = mbc.get_number_of_rows()
 
-
     def create_tabs(self):
         tab1, tab2 = st.tabs(["Tab 1", "Tab 2"])
         with tab1:
@@ -20,7 +19,7 @@ class App:
         with tab2:
             st.header("Tab 2")
 
-    def create_image_container(self, parent,place_id):
+    def create_image_container(self, parent, place_id):
         tile = parent.container()
         i = st.session_state['last_id'] + 1
         if not st.session_state['is_image_generate'][place_id]:

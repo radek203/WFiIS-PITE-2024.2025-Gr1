@@ -1,6 +1,6 @@
 import streamlit as st
 
-from backend.models import ImageModelSD35LT, ImageModel
+from backend.models import ImageModel
 from backend.scikit_impl import ScikitImpl
 from backend.stablediffusion import StableDiffusion
 from config import config
@@ -21,6 +21,7 @@ def main():
     if 'image_generator' not in st.session_state:
         st.session_state['image_generator'] = StableDiffusion(ImageModel.get_model(config['model_id']), config['debug'])
         st.rerun()
+
 
 if __name__ == '__main__':
     main()

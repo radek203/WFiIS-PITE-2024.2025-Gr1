@@ -46,7 +46,7 @@ You need to have Build Tools installed on your machine. https://visualstudio.mic
 ```
 
 ## Running app
-- From inside main directory run
+- From inside main directory run:
 ```bash
     python -m streamlit run main.py
  ```

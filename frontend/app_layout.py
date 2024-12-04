@@ -8,6 +8,7 @@ class App:
     st.session_state['is_image_generate'] = {0: False, 1: False, 2: False, 3: False, 4: False, 5: False, 6: False, 7: False, 8: False}
     st.session_state['image_data'] = {0: [None, 0, 0, ''], 1: [None, 0, 0, ''], 2: [None, 0, 0, '']}
     st.session_state['last_id'] = 0
+    st.session_state['category_id'] = 1
 
     def __init__(self):
         self.KEY_ID = 0
@@ -18,14 +19,15 @@ class App:
         i = st.session_state['last_id'] + 1
         if not st.session_state['is_image_generate'][place_id]:
             tile.write("Generate image")
-            prompt, tags, category_id = st.session_state['image_generator'].generate_random_prompt(1)
+            prompt, tags = st.session_state['image_generator'].generate_random_prompt(1, st.session_state['category_id'])
             st.session_state['image_generator'].generate_image(prompt, i)
             st.session_state['is_image_generate'][place_id] = True
-            st.session_state['image_data'][place_id] = [f"images/image{i}.png", config['user_id'], category_id, "|".join(tags)]
+            st.session_state['image_data'][place_id] = [f"images/image{i}.png", config['user_id'], st.session_state['category_id'], "|".join(tags)]
             st.session_state['last_id'] = i
+            st.session_state['category_id'] += 1
         img_data = st.session_state['image_data'][place_id]
         tile.image(img_data[0])
-        rating = tile.slider("Rating",0,10,key=self.KEY_ID)
+        rating = tile.slider("Rating", 1, 10, key=self.KEY_ID)
         self.KEY_ID += 1
         tile.button("Rate", key=self.KEY_ID, use_container_width=True, on_click=mbc.rate_callback, args=(img_data[1], rating, img_data[2], img_data[3]))
         self.KEY_ID += 1

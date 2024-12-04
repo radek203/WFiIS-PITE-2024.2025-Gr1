@@ -20,6 +20,9 @@ class App:
         if not st.session_state['is_image_generate'][place_id]:
             tile.write("Generate image")
             prompt, tags = st.session_state['image_generator'].generate_random_prompt(1, st.session_state['category_id'])
+            prompt = prompt[0]
+            tags = tags[0]
+            print(prompt, tags)
             st.session_state['image_generator'].generate_image(prompt, i)
             st.session_state['is_image_generate'][place_id] = True
             st.session_state['image_data'][place_id] = [f"images/image{i}.png", config['user_id'], st.session_state['category_id'], "|".join(tags)]

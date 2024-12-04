@@ -19,10 +19,15 @@ class StableDiffusion:
     def generate_random_prompt(self, n, category_id):
         adjectives = self.get_random_adjectives(n)
         tags = self.get_random_tags(n, category_id)
+        all_tags = [[] for _ in range(n)]
         prompts = []
         for i in range(n):
-            prompts.append(adjectives.iloc[i].values[0] + " " + tags.iloc[i].values[0])
-        return prompts, tags
+            tag_f = adjectives.iloc[i].values[0]
+            tag_s = tags.iloc[i].values[0]
+            prompts.append(tag_f + " " + tag_s)
+            all_tags[i].append(tag_f)
+            all_tags[i].append(tag_s)
+        return prompts, all_tags
 
     def generate_image(self, prompt, img_id, steps=10):
         image = self.model.generate_image(prompt, steps)

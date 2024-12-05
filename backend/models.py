@@ -5,8 +5,6 @@ from diffusers import BitsAndBytesConfig, SD3Transformer2DModel, DiffusionPipeli
 from diffusers import StableDiffusion3Pipeline
 from transformers import T5EncoderModel
 
-from config import config
-
 
 class ImageModel(ABC):
 
@@ -21,7 +19,7 @@ class ImageModel(ABC):
     def setup_pipeline(self):
         pass
 
-    def generate_image(self, prompt, steps=config['steps']):
+    def generate_image(self, prompt, steps):
         image = self.pipeline(
             prompt=prompt,
             num_inference_steps=steps,
@@ -133,7 +131,7 @@ class ImageModelSDXL1(ImageModel):
         )
         self.refiner.to("cuda")
 
-    def generate_image(self, prompt, steps=config['steps']):
+    def generate_image(self, prompt, steps):
         high_noise_frac = 0.8
 
         image = self.pipeline(

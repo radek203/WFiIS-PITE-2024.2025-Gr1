@@ -1,7 +1,7 @@
 ### This project is only compatible with Windows.
 ### Project is created using Python 3.12.7, and you need to have it installed on your machine.
 #### Newer versions of Python might not work with dependencies. You need to check it by yourself.
-#### Please run project using administrator privileges and without any virtual environments.
+#### Please run project using administrator privileges and without any virtual environments, and close all other streamlit web tabs before running the app.
 
 ## How to setup the environment
 You need to have Build Tools installed on your machine. https://visualstudio.microsoft.com/pl/visual-cpp-build-tools/
@@ -18,6 +18,7 @@ You need to have Build Tools installed on your machine. https://visualstudio.mic
     python -m pip install scikit-learn
     python -m pip install surprise
     python -m pip install pandas
+    python -m pip install python-dotenv
 
     python -m pip uninstall numpy
     python -m pip install "numpy<2.0"
@@ -45,7 +46,7 @@ You need to have Build Tools installed on your machine. https://visualstudio.mic
 ```
 
 ## Running app
-- From inside main directory run
+- From inside main directory run:
 ```bash
     python -m streamlit run main.py
  ```

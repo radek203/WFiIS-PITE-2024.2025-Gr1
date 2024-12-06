@@ -22,20 +22,9 @@ def get_number_of_rows():
     data = pd.read_csv("data/ratings.csv")
     return data.shape[0]
 
-
-def get_top_3_categories():
+def get_top_n_categories(n, userId):
     data = pd.read_csv("data/ratings.csv")
-    category_sum = data.groupby("categoryId")["rating"].sum().reset_index()
-    sorted_categories = category_sum.sort_values(by = "rating", ascending = False).reset_index(drop=True)
-    if len(sorted_categories)>3 and sorted_categories.loc[2, "rating"] == sorted_categories.loc[3, "rating"]:
-        top_3_categories = pd.concat([sorted_categories.iloc[:2], sorted_categories.iloc[2:4].sample(1)]).reset_index(drop=True)
-    else:
-        top_3_categories = sorted_categories.iloc[:3].reset_index(drop=True)
-    return top_3_categories
-
-
-def get_top_category():
-    data = pd.read_csv("data/ratings.csv")
-    category_sum_1 = data.groupby("categoryId")["rating"].sum().reset_index()
-    top_category = category_sum_1.sort_values(by = "rating", ascending = False).head(1)
+    specific_user_data = data[data["userId"] == userId]
+    category_sum = specific_user_data.groupby("categoryId")["rating"].sum().reset_index()
+    top_category = category_sum.sort_values(by = "rating", ascending = False).head(n)
     return top_category

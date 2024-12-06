@@ -21,3 +21,12 @@ def save_row_to_file(new_row):
 def get_number_of_rows():
     data = pd.read_csv("data/ratings.csv")
     return data.shape[0]
+
+
+def get_top_3_categories():
+    data = pd.read_csv("data/ratings.csv")
+    category_sum = data.groupby("categoryId")["rating"].sum().reset_index()
+    top_3_categories = category_sum.sort_values(by = "rating", ascending = False).head(3)
+    return top_3_categories
+
+    

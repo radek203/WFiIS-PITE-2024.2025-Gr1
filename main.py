@@ -5,12 +5,11 @@ from backend.scikit_impl import ScikitImpl
 from backend.stablediffusion import StableDiffusion
 from config import config
 from frontend.app_layout import App
-
+from appmain import appmain
 
 def main():
-    print("Welcome to the program!")
-    app = App()
-    app.create_layout()
+    st.session_state['categories_selected'] = False
+    appmain()
     scikit = ScikitImpl(config['debug'])
     scikit.train()
     ids, ratings = scikit.get_top_n_recommendations(config['user_id'], 3)

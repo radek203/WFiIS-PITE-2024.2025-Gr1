@@ -8,6 +8,7 @@ from frontend.app_layout import App
 from appmain import appmain
 
 def main():
+    st.session_state['categories_selected'] = False
     appmain()
     scikit = ScikitImpl(config['debug'])
     scikit.train()

@@ -13,6 +13,7 @@ def display_components(rows, method):
 
 class App:
     st.session_state['is_image_generate'] = {0: False, 1: False, 2: False, 3: False, 4: False, 5: False, 6: False, 7: False, 8: False}
+    st.session_state['is_image_rated']={0:False, 1:False, 2:False, 3:False, 4:False, 5:False, 6:False, 7:False, 8:False}
     st.session_state['image_data'] = {0: [None, 0, 0, ''], 1: [None, 0, 0, ''], 2: [None, 0, 0, '']}
     st.session_state['last_id'] = 0
     st.session_state['category_id'] = 1
@@ -39,12 +40,13 @@ class App:
         tile.image(img_data[0])
 
     def create_rating_component(self,tile,place_id):
-        img_data = st.session_state['image_data'][place_id]
-        rating = tile.slider("Rating", 1, 10, key=self.KEY_ID)
-        self.KEY_ID += 1
-        tile.button("Rate", key=self.KEY_ID, use_container_width=True, on_click=mbc.rate_callback,
-                    args=(img_data[1], rating, img_data[2], img_data[3]))
-        self.KEY_ID += 1
+        if not st.session_state['is_image_rated'][place_id]:
+            img_data = st.session_state['image_data'][place_id]
+            rating = tile.slider("Rating", 1, 10, key=self.KEY_ID)
+            self.KEY_ID += 1
+            tile.button("Rate", key=self.KEY_ID, use_container_width=True, on_click=mbc.rate_callback,
+                        args=(img_data[1], rating, img_data[2], img_data[3],place_id))
+            self.KEY_ID += 1
 
     def create_layout(self):
         container = st.container(border=True)
@@ -58,4 +60,5 @@ class App:
             row3 = layout.columns(3)
             display_components(row1+row2+row3,self.create_image_container)
             display_components(row1+row2+row3,self.create_rating_component)
+
 

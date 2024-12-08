@@ -1,14 +1,26 @@
 import pandas as pd
+import streamlit as st
 
 
-def rate_callback(user_id, ratings, category_id, tags):
+def rate_callback(user_id, ratings, category_id, tags, place_id):
     new_row = {
         "userId": user_id,
         "categoryId": category_id,
         "rating": ratings,
         "tags": tags
     }
+    st.session_state['is_image_rated'][place_id] = True
     save_row_to_file(new_row)
+    regenerate_images()
+
+
+def regenerate_images():
+    if False not in st.session_state['is_image_rated'].values():
+        for i in range(9):
+            st.session_state['is_image_rated'][i] = False
+            st.session_state['is_image_generate'][i] = False
+        st.session_state['category_id'] = 1
+        print(st.session_state['is_image_rated'], st.session_state['is_image_generate'])
 
 
 def save_row_to_file(new_row):

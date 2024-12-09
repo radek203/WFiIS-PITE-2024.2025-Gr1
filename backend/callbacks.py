@@ -26,6 +26,7 @@ def regenerate_images():
             st.session_state['is_image_rated'][i] = False
             st.session_state['is_image_generate'][i] = False
         st.session_state['category_id'] = 1
+        st.session_state['decision_buttons'] = True
         print(st.session_state['is_image_rated'], st.session_state['is_image_generate'])
 
 
@@ -73,3 +74,12 @@ def change_steps_callback():
     steps = st.session_state['steps_input']
     st.session_state['steps'] = int(steps)
     print("Steps:", steps)
+
+
+def next_step_selection():
+    next_step = st.session_state['next_step_selection']
+    st.session_state['decision_buttons'] = False
+    if next_step.startswith("Generate"):
+        st.session_state['tags_rating'] = False
+    else:
+        st.session_state['tags_rating'] = True

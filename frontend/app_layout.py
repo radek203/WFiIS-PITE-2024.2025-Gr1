@@ -19,6 +19,8 @@ class App:
     st.session_state['current_user'] = 0
     st.session_state['steps'] = 0
     st.session_state['model'] = None
+    st.session_state['decision_buttons'] = False
+    st.session_state['tags_rating'] = False
 
     def __init__(self):
         self.KEY_ID = 0
@@ -29,6 +31,9 @@ class App:
         i = st.session_state['last_id'] + 1
         if not st.session_state['is_image_generate'][place_id]:
             tile.write("Generate image")
+            #if st.session_state['tags_rating']:
+            #
+            #else:
             prompt, tags = st.session_state['image_generator'].generate_random_prompt(1, st.session_state['category_id'])
             prompt = prompt[0]
             tags = tags[0]
@@ -37,6 +42,7 @@ class App:
             st.session_state['is_image_generate'][place_id] = True
             st.session_state['image_data'][place_id] = [f"images/image{i}.png", st.session_state['current_user'], st.session_state['category_id'], "|".join(tags)]
             st.session_state['last_id'] = i
+            #if not st.session_state['tags_rating']:
             st.session_state['category_id'] += 1
         img_data = st.session_state['image_data'][place_id]
         tile.image(img_data[0])
@@ -60,6 +66,8 @@ class App:
             box.selectbox("Select model", ["", "SD35L", "SD35LT", "SD3MD", "SDXL1"], key="model_selection", on_change=mbc.change_model_callback, args=(box,))
         elif st.session_state['steps'] == 0:
             box.number_input("Number of steps", key="steps_input", min_value=0, step=1, on_change=mbc.change_steps_callback)
+        elif st.session_state['decision_buttons']:
+            box.selectbox("Select next step", ["", "Generate more images to rate categories", "Go to generating images based on tags from best rated categories only"], key="next_step_selection", on_change=mbc.next_step_selection)
         else:
             images_box = box.container(border=True)
             row1 = images_box.columns(3)

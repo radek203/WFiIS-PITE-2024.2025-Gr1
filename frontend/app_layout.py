@@ -1,7 +1,6 @@
 import streamlit as st
 
 import backend.callbacks as mbc
-from config import config
 
 
 def display_components(rows, method):
@@ -17,6 +16,9 @@ class App:
     st.session_state['image_data'] = {0: [None, 0, 0, ''], 1: [None, 0, 0, ''], 2: [None, 0, 0, '']}
     st.session_state['last_id'] = 0
     st.session_state['category_id'] = 1
+    st.session_state['current_user'] = 0
+    st.session_state['steps'] = 0
+    st.session_state['model'] = None
 
     def __init__(self):
         self.KEY_ID = 0
@@ -31,9 +33,9 @@ class App:
             prompt = prompt[0]
             tags = tags[0]
             print(prompt, tags)
-            st.session_state['image_generator'].generate_image(prompt, i)
+            st.session_state['image_generator'].generate_image(prompt, i, st.session_state['steps'])
             st.session_state['is_image_generate'][place_id] = True
-            st.session_state['image_data'][place_id] = [f"images/image{i}.png", config['user_id'], st.session_state['category_id'], "|".join(tags)]
+            st.session_state['image_data'][place_id] = [f"images/image{i}.png", st.session_state['current_user'], st.session_state['category_id'], "|".join(tags)]
             st.session_state['last_id'] = i
             st.session_state['category_id'] += 1
         img_data = st.session_state['image_data'][place_id]
@@ -49,13 +51,19 @@ class App:
 
     def create_layout(self):
         container = st.container(border=True)
-        container.write("Welcome! Please click 👍 if you like the image and if it is not what you are looking for click 👎. Remember there are two tabs to choose from. Based on your opinion app will generate image for you!")
-        layout = st.container(border=True)
-        if 'image_generator' not in st.session_state:
-            layout.write("Loading Image Generator...")
+        container.write("Welcome! Please rate all the images below. Based on your opinion app will generate images for you!")
+        box = st.empty()
+        if st.session_state['current_user'] == 0:
+            users = [str(user) for user in mbc.get_existing_users()]
+            box.selectbox("Select user", [""] + users + ["Create New User (Last Id + 1)"], key="user_selection", on_change=mbc.change_user_callback)
+        elif 'image_generator' not in st.session_state:
+            box.selectbox("Select model", ["", "SD35L", "SD35LT", "SD3MD", "SDXL1"], key="model_selection", on_change=mbc.change_model_callback, args=(box,))
+        elif st.session_state['steps'] == 0:
+            box.number_input("Number of steps", key="steps_input", min_value=0, step=1, on_change=mbc.change_steps_callback)
         else:
-            row1 = layout.columns(3)
-            row2 = layout.columns(3)
-            row3 = layout.columns(3)
+            images_box = box.container(border=True)
+            row1 = images_box.columns(3)
+            row2 = images_box.columns(3)
+            row3 = images_box.columns(3)
             display_components(row1 + row2 + row3, self.create_image_container)
             display_components(row1 + row2 + row3, self.create_rating_component)

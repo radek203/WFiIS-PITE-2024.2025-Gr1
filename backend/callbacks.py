@@ -26,7 +26,7 @@ def get_number_of_rows():
     return data.shape[0]
 
 
-def get_top_n_categories(n, userId):
+def after_user_rates_n(n, userId):
     data = pd.read_csv("data/ratings.csv")
     specific_user_data = data[data["userId"] == userId]
     category_sum = specific_user_data.groupby("categoryId")["rating"].sum().reset_index()

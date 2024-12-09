@@ -1,4 +1,2 @@
 .idea
 __pycache__
-.env
-test_noapp.py

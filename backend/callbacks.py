@@ -93,5 +93,4 @@ def get_top_n_categories(n, user_id):
     specific_user_data = data[data["userId"] == user_id]
     category_sum = specific_user_data.groupby("categoryId")["rating"].sum().reset_index()
     top_category = category_sum.sort_values(by = "rating", ascending = False).head(n)
-    st.session_state['categories_selected'] = True
     return top_category

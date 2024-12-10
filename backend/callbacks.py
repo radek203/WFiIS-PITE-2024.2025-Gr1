@@ -31,8 +31,7 @@ def regenerate_images():
         st.session_state['category_id'] = 1
         st.session_state['decision_buttons'] = True
         print(st.session_state['is_image_rated'], st.session_state['is_image_generate'])
-        if st.session_state['amount_of_rated_categories'] >= 9:
-            downsize_amount_of_categories(get_top_n_categories(3,st.session_state['current_user']))
+        downsize_amount_of_categories(get_top_n_categories(3,st.session_state['current_user']))
 
 
 def save_row_to_file(new_row):

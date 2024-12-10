@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 import backend.callbacks as mbc
 
@@ -21,6 +22,7 @@ class App:
     st.session_state['model'] = None
     st.session_state['decision_buttons'] = False
     st.session_state['tags_rating'] = False
+    st.session_state['show_all'] = False
 
     def __init__(self):
         self.KEY_ID = 0
@@ -67,7 +69,17 @@ class App:
         elif st.session_state['steps'] == 0:
             box.number_input("Number of steps", key="steps_input", min_value=0, step=1, on_change=mbc.change_steps_callback)
         elif st.session_state['decision_buttons']:
-            box.selectbox("Select next step", ["", "Generate more images to rate categories", "Go to generating images based on tags from best rated categories only"], key="next_step_selection", on_change=mbc.next_step_selection)
+            box.selectbox("Select next step", ["", "Generate more images to rate categories", "Go to generating images based on tags from best rated categories only", "Show all generated images"], key="next_step_selection", on_change=mbc.next_step_selection)
+        elif st.session_state['show_all']:
+            png_files = [file for file in os.listdir("images") if file.endswith('.png')]
+            images_box = box.container(border=True)
+            row = images_box.columns(3)
+            i = 0
+            for file in png_files:
+                if i % 3 == 0:
+                    row = images_box.columns(3)
+                row[i % 3].container().image(f"images/{file}")
+                i += 1
         else:
             images_box = box.container(border=True)
             row1 = images_box.columns(3)

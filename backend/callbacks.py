@@ -79,7 +79,9 @@ def change_steps_callback():
 def next_step_selection():
     next_step = st.session_state['next_step_selection']
     st.session_state['decision_buttons'] = False
-    if next_step.startswith("Generate"):
-        st.session_state['tags_rating'] = False
+    st.session_state['tags_rating'] = False
+    st.session_state['show_all'] = False
+    if next_step.startswith("Show"):
+        st.session_state['show_all'] = True
     else:
         st.session_state['tags_rating'] = True

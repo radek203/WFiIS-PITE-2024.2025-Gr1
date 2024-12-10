@@ -1,6 +1,5 @@
 import pandas as pd
 import streamlit as st
-import numpy as np
 
 from backend.models import ImageModel
 from backend.scikit_impl import ScikitImpl
@@ -23,13 +22,13 @@ def rate_callback(user_id, ratings, category_id, tags, place_id):
 def regenerate_images():
     if False not in st.session_state['is_image_rated'].values():
         calculate_ratings(st.session_state['current_user'])
+        print(get_top_n_categories(3, st.session_state['current_user']))
         for i in range(9):
             st.session_state['is_image_rated'][i] = False
             st.session_state['is_image_generate'][i] = False
         st.session_state['category_id'] = 1
         st.session_state['decision_buttons'] = True
         print(st.session_state['is_image_rated'], st.session_state['is_image_generate'])
-        downsize_amount_of_categories(get_top_n_categories(3,st.session_state['current_user']))
 
 
 def save_row_to_file(new_row):
@@ -89,20 +88,10 @@ def next_step_selection():
         st.session_state['tags_rating'] = True
 
 
-def get_top_n_categories(n, userId):
+def get_top_n_categories(n, user_id):
     data = pd.read_csv("data/ratings.csv")
-    specific_user_data = data[data["userId"] == userId]
+    specific_user_data = data[data["userId"] == user_id]
     category_sum = specific_user_data.groupby("categoryId")["rating"].sum().reset_index()
     top_category = category_sum.sort_values(by = "rating", ascending = False).head(n)
     st.session_state['categories_selected'] = True
     return top_category
-
-
-def downsize_amount_of_categories(remaining_categories):
-    userid = config["user_id"]
-    if 'categories_selected' in st.session_state and st.session_state['categories_selected'] == True:
-        categories = pd.read_csv("data/categories.csv")
-        downsized = categories.iloc[np.array(remaining_categories["categoryId"]) - 1, :]
-        downsized.to_csv(f"data/categories_{userid}.csv", index = False)
-        if 'image_generator' in st.session_state:
-            st.session_state['image_generator'].categories = pd.read_csv(f"data/categories_{userid}.csv")

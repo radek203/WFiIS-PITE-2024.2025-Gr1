@@ -31,6 +31,6 @@ class StableDiffusion:
             all_tags[i].append(tag_s)
         return prompts, all_tags
 
-    def generate_image(self, prompt, img_id, steps=config['steps']):
+    def generate_image(self, prompt, img_id, steps):
         image = self.model.generate_image(prompt, int(steps))
         image.save("images/image" + str(img_id) + ".png")

@@ -16,8 +16,6 @@ def rate_callback(user_id, ratings, category_id, tags, place_id):
         "tags": tags
     }
     st.session_state['is_image_rated'][place_id] = True
-    if 'amount_of_rated_categories' in st.session_state:
-        st.session_state['amount_of_rated_categories'] += 1
     save_row_to_file(new_row)
     regenerate_images()
 

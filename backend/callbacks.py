@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-import numpy as np #TODO
+import numpy as np
 
 from backend.models import ImageModel
 from backend.scikit_impl import ScikitImpl

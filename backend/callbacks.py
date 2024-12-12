@@ -1,6 +1,5 @@
 import pandas as pd
 import streamlit as st
-import numpy as np #TODO
 
 from backend.models import ImageModel
 from backend.scikit_impl import ScikitImpl
@@ -95,24 +94,3 @@ def get_top_n_categories(n, user_id):
     category_sum = specific_user_data.groupby("categoryId")["rating"].sum().reset_index()
     top_category = category_sum.sort_values(by = "rating", ascending = False).head(n)
     return top_category
-
-
-def get_top_n_tags(n, user_id, category_ids):
-    data = pd.read_csv("data/ratings.csv")
-    top_category_ids = category_ids["categoryId"].tolist()
-    specific_user_data1 = data[(data["userId"] == user_id) & (data["categoryId"].isin(top_category_ids))]
-    specific_user_data2 = specific_user_data1.assign(tags = specific_user_data1["tags"].str.split("|"))
-    explode_tags = specific_user_data2.explode("tags")
-    best_tags_in_category = {}
-    for categoryId in top_category_ids:
-        tags_in_category = explode_tags[explode_tags["categoryId"] == categoryId]
-        tags_with_rating = tags_in_category[["rating", "tags"]]
-        tags = np.array(tags_in_category["tags"])
-        tag_sums = {}
-        for tag in tags:
-            ratings_for_tag = tags_with_rating[tags_with_rating["tags"] == tag]
-            tag_sums[tag] = ratings_for_tag["rating"].sum()
-        sorted_tags = [k for k, v in sorted(tag_sums.items(), key=lambda item: item[1], reverse=True)]
-        best_tags_in_category[categoryId] = sorted_tags[0:n]
-    print(best_tags_in_category)
-    return best_tags_in_category

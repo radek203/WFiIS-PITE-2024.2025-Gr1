@@ -22,6 +22,7 @@ def rate_callback(user_id, ratings, category_id, tags, place_id):
 def regenerate_images():
     if False not in st.session_state['is_image_rated'].values():
         calculate_ratings(st.session_state['current_user'])
+        print(get_top_n_categories(3, st.session_state['current_user']))
         for i in range(9):
             st.session_state['is_image_rated'][i] = False
             st.session_state['is_image_generate'][i] = False
@@ -85,3 +86,11 @@ def next_step_selection():
         st.session_state['show_all'] = True
     else:
         st.session_state['tags_rating'] = True
+
+
+def get_top_n_categories(n, user_id):
+    data = pd.read_csv("data/ratings.csv")
+    specific_user_data = data[data["userId"] == user_id]
+    category_sum = specific_user_data.groupby("categoryId")["rating"].sum().reset_index()
+    top_category = category_sum.sort_values(by = "rating", ascending = False).head(n)
+    return top_category

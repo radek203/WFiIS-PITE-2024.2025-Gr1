@@ -94,3 +94,9 @@ def get_top_n_categories(n, user_id):
     category_sum = specific_user_data.groupby("categoryId")["rating"].sum().reset_index()
     top_category = category_sum.sort_values(by = "rating", ascending = False).head(n)
     return top_category
+
+def get_top_n_recommendations(n, user_id):
+    sc = ScikitImpl()
+    sc.get_tags_train_data_set()
+    sc.train()
+    return(sc.get_top_n_ratings(user_id, n))

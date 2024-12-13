@@ -28,7 +28,6 @@ def regenerate_images():
             st.session_state['is_image_generate'][i] = False
         st.session_state['category_id'] = 1
         st.session_state['decision_buttons'] = True
-        print(st.session_state['is_image_rated'], st.session_state['is_image_generate'])
 
 
 def save_row_to_file(new_row):
@@ -59,7 +58,7 @@ def change_user_callback():
 def calculate_ratings(user_id):
     scikit = ScikitImpl(config['debug'])
     scikit.train()
-    ids, ratings = scikit.get_top_n_recommendations(user_id, 3)
+    ids, ratings = scikit.get_top_n_ratings(user_id, 3)
     print(f"IDs: {ids}", f"Ratings: {ratings}")
 
 

@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, MultiLabelBinarizer
+from sklearn.preprocessing import LabelEncoder
 from surprise import Dataset, Reader
 from surprise import SVD
 from surprise import accuracy
@@ -47,7 +47,6 @@ class ScikitImpl:
         return data_grouped
 
 
-
     def train(self):
         ratings_tags_df = self.get_tags_train_data_set()
         # 80% training, 20% testing - To learn the model and test it
@@ -71,7 +70,7 @@ class ScikitImpl:
 
         if self.debug:
             # testset to test the model
-            testset = [(row['userId'], row['categoryId'], row['rating']) for _, row in test_df.iterrows()]
+            testset = [(row['userId'], row['tag'], row['rating']) for _, row in test_df.iterrows()]
 
             # Predict ratings for the testset
             predictions_test = self.model_svd.test(testset)
@@ -79,31 +78,6 @@ class ScikitImpl:
             # Calculate RMSE on the test set, the lower the value the better, for 1-10 rating scale, we want RMSE to be less than 1 (1 point of rating)
             accuracy.rmse(predictions_test)
 
-    def get_top_n_recommendations(self, user_id, n=10):
-        user_id = self.user_encoder.transform([user_id])[0]
-        # Get all unique categories
-        all_categories = self.ratings_df['categoryId'].unique()
-
-        # Get all user-category pairs
-        user_category_pairs = [(user_id, category_id, 0) for category_id in all_categories]
-
-        # Predict ratings for all user-category pairs
-        predictions_cf = self.model_svd.test(user_category_pairs)
-
-        # Sort the predictions by estimated rating in descending order and get top n recommendations
-        top_n_recommendations = sorted(predictions_cf, key=lambda x: x.est, reverse=True)[:n]
-
-        if self.debug:
-            print(top_n_recommendations)
-
-        # Get the top n predicted ratings
-        predicted_ratings = [pred.est for pred in top_n_recommendations]
-
-        # Get the top n category ids
-        top_category_ids = [pred.iid for pred in top_n_recommendations]
-
-        # Return the top categories
-        return [self.category_encoder.inverse_transform(top_category_ids), predicted_ratings]
 
     def get_top_n_ratings(self, user_id, n=10):
         user_id_encoded = self.user_encoder.transform([user_id])[0]

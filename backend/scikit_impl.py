@@ -32,8 +32,8 @@ class ScikitImpl:
         ])
 
         # Split the tags column into multiple columns based on the delimiter '|' - It is how the model can understand the tags
-        self.mlb = MultiLabelBinarizer()
-        data_expanded = data_expanded.join(pd.DataFrame(self.mlb.fit_transform(data_expanded.pop('tags').str.split('|')), columns=self.mlb.classes_, index=data_expanded.index))
+        mlb = MultiLabelBinarizer()
+        data_expanded = data_expanded.join(pd.DataFrame(mlb.fit_transform(data_expanded.pop('tags').str.split('|')), columns=mlb.classes_, index=data_expanded.index))
 
         # Encode the tags
         self.tag_encoder = LabelEncoder()
@@ -77,8 +77,9 @@ class ScikitImpl:
             accuracy.rmse(predictions_test)
 
     def get_top_n_ratings(self, user_id, n=3):
-        user_tags = self.ratings_df[(self.ratings_df['userId'] == user_id)]['tag'].unique()
         top_categories = mvc.get_top_n_categories(n, user_id)['categoryId'].head(n).tolist()
+        user_id = self.user_encoder.transform([user_id])[0]
+        user_tags = self.ratings_df[(self.ratings_df['userId'] == user_id)]['tag'].unique()
         tags_count = 10 if self.debug else 100
         cat1 = pd.read_csv("data/cat{}.csv".format(top_categories[0]), header=None)[0].head(tags_count)
         cat2 = pd.read_csv("data/cat{}.csv".format(top_categories[1]), header=None)[0].head(tags_count)

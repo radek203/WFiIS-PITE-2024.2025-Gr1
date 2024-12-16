@@ -28,7 +28,6 @@ def regenerate_images():
             st.session_state['is_image_generate'][i] = False
         st.session_state['category_id'] = 1
         st.session_state['decision_buttons'] = True
-        print(st.session_state['is_image_rated'], st.session_state['is_image_generate'])
 
 
 def save_row_to_file(new_row):
@@ -51,7 +50,8 @@ def get_existing_users():
 def change_user_callback():
     selected_user = st.session_state["user_selection"]
     if selected_user == "Create New User (Last Id + 1)":
-        selected_user = int(get_existing_users()[-1]) + 1
+        existing_users = get_existing_users()
+        selected_user = 1 if len(existing_users) == 0 else (int(existing_users[-1]) + 1)
     st.session_state['current_user'] = int(selected_user)
     print("Selected user:", selected_user)
 
@@ -59,7 +59,7 @@ def change_user_callback():
 def calculate_ratings(user_id):
     scikit = ScikitImpl(config['debug'])
     scikit.train()
-    ids, ratings = scikit.get_top_n_recommendations(user_id, 3)
+    ids, ratings = scikit.get_top_n_ratings(user_id, 3)
     print(f"IDs: {ids}", f"Ratings: {ratings}")
 
 
@@ -91,6 +91,7 @@ def next_step_selection():
 def get_top_n_categories(n, user_id):
     data = pd.read_csv("data/ratings.csv")
     specific_user_data = data[data["userId"] == user_id]
+    specific_user_data = specific_user_data[~specific_user_data["categoryId"].str.contains(r'\|', na=False)]
     category_sum = specific_user_data.groupby("categoryId")["rating"].sum().reset_index()
-    top_category = category_sum.sort_values(by = "rating", ascending = False).head(n)
+    top_category = category_sum.sort_values(by="rating", ascending=False).head(n)
     return top_category

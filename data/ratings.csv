@@ -90,3 +90,50 @@ userId,categoryId,rating,tags
 1,3,9,phoenix|magic|castle|wizard
 1,3,8,unicorn|fire|knight|forest
 1,1,10,waterfall|forest|trees|rainbow
+1,1,6,cheerful|waterfall
+1,2,6,colorful|medieval village
+1,3,2,shiny|mythical creature
+1,4,5,tiny|bear
+1,5,2,massive|VR headset
+1,6,7,cheerful|shooting star
+1,7,3,shiny|Roman empire
+1,8,8,vibrant|Amazon rainforest
+1,9,2,rustic|urban nightlife
+1,1,6,slender|desert
+1,2,2,vibrant|castle
+1,3,7,colorful|mythical creature
+1,4,7,gloomy|deer
+1,5,2,rustic|drones
+1,6,2,vibrant|galaxy
+1,7,3,cheerful|Trojan war
+1,8,7,vibrant|Taj Mahal
+1,9,2,vibrant|skyscrapers
+1,1,1,shiny|desert
+1,3,1,shiny|mermaid
+1,2,5,cheerful|skyscraper
+1,4,5,shiny|eagle
+1,5,2,vibrant|robotic arm
+1,6,7,shiny|nebula
+1,7,2,sleek|Roman empire
+1,8,2,massive|African savanna
+1,9,8,cheerful|modern architecture
+1,1|2|3,8,shiny mountains|ancient temple|dark sorcerer
+1,1|2|3,9,vibrant forest|pagoda|unicorn
+1,1|2|3,7,fluffy ocean|lighthouse|wizard
+1,1|2|3,6,gloomy desert|cathedral|knight in armor
+1,1|2|3,5,colorful beach|castle|dragon
+1,1|2|3,8,shiny river|clock tower|mermaid
+1,1|2|3,7,tiny sunrise|palace|elf warrior
+1,1|2|3,9,sleek valley|bridge|fairies
+1,1|2|3,10,rustic waterfall|ancient temple|orc
+1,1|2|3,6,vibrant sunset|pagoda|mythical creature
+1,1|2|3,7,fluffy sunrise|cathedral|dark sorcerer
+1,1|2|3,8,shiny forest|castle|wizard
+1,1|2|3,5,gloomy mountains|skyscraper|knight in armor
+1,1|2|3,4,sleek beach|lighthouse|fairies
+1,1|2|3,10,rustic desert|bridge|orc
+1,1|2|3,6,colorful valley|clock tower|unicorn
+1,1|2|3,7,tiny river|palace|mermaid
+1,1|2|3,8,vibrant waterfall|pagoda|mythical creature
+1,1|2|3,9,shiny ocean|castle|dragon
+1,1|2|3,8,gloomy sunset|ancient temple|elf warrior

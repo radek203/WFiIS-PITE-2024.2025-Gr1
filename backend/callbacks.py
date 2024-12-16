@@ -95,7 +95,6 @@ def get_top_n_categories(n, user_id):
     return top_category
 
 def get_top_n_recommendations(n, user_id):
-    sc = ScikitImpl()
-    sc.get_tags_train_data_set()
+    sc = ScikitImpl(True)
     sc.train()
-    return(sc.get_top_n_ratings(user_id, n))
+    return sc.get_top_n_ratings(user_id, n)

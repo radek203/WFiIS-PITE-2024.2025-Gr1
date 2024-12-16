@@ -57,6 +57,7 @@ You need to have Build Tools installed on your machine. https://visualstudio.mic
 - categoryId: The main category of tags used to generate the picture (we need integer type here)
 - rating: The rating that the user gave to the picture (1-10)
 - tags: The tags that model used to generate the picture (separated by '|')
+- in the program we should distinguish the difference between rating a category and tags, they should be treated separately
 
 ### categories.csv
 - id: ID of the category

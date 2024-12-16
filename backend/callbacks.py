@@ -50,7 +50,11 @@ def get_existing_users():
 def change_user_callback():
     selected_user = st.session_state["user_selection"]
     if selected_user == "Create New User (Last Id + 1)":
-        selected_user = int(get_existing_users()[-1]) + 1
+        existing_users = get_existing_users()
+        if len(existing_users) == 0:
+            selected_user = 1
+        else:
+            selected_user = int(existing_users[-1]) + 1
     st.session_state['current_user'] = int(selected_user)
     print("Selected user:", selected_user)
 
@@ -90,11 +94,7 @@ def next_step_selection():
 def get_top_n_categories(n, user_id):
     data = pd.read_csv("data/ratings.csv")
     specific_user_data = data[data["userId"] == user_id]
+    specific_user_data = specific_user_data[~specific_user_data["categoryId"].str.contains(r'\|', na=False)]
     category_sum = specific_user_data.groupby("categoryId")["rating"].sum().reset_index()
-    top_category = category_sum.sort_values(by = "rating", ascending = False).head(n)
+    top_category = category_sum.sort_values(by="rating", ascending=False).head(n)
     return top_category
-
-def get_top_n_recommendations(n, user_id):
-    sc = ScikitImpl(True)
-    sc.train()
-    return sc.get_top_n_ratings(user_id, n)

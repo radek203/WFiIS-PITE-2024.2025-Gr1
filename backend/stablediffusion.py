@@ -1,7 +1,5 @@
 import pandas as pd
 
-from config import config
-
 
 class StableDiffusion:
 

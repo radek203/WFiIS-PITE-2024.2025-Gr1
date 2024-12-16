@@ -107,7 +107,7 @@ userId,categoryId,rating,tags
 1,6,2,vibrant|galaxy
 1,7,3,cheerful|Trojan war
 1,8,7,vibrant|Taj Mahal
-1,9|2,2,vibrant|skyscrapers
+1,9,2,vibrant|skyscrapers
 1,1,1,shiny|desert
 1,3,1,shiny|mermaid
 1,2,5,cheerful|skyscraper
@@ -117,54 +117,23 @@ userId,categoryId,rating,tags
 1,7,2,sleek|Roman empire
 1,8,2,massive|African savanna
 1,9,8,cheerful|modern architecture
-6,8|4|7,3,Great Wall of China|deer|medieval knights
-9,2|7|4,3,clock tower|Viking warriors|horse
-8,5|1|6,8,robotic arm|sunrise|planets
-7,1|9|4,10,ocean|modern architecture|fox
-8,4|7|9,3,eagle|Norse mythology|urban nightlife
-7,1|4|7,7,forest|rabbit|ancient artifacts
-5,1|9|6,4,mountains|city park|stars
-10,8|7|5,6,Paris Eiffel Tower|ancient artifacts|neon lights
-9,4|5|6,4,horse|futuristic city|asteroid belt
-6,9|4|8,2,urban nightlife|wolf|African savanna
-9,7|6|3,3,ancient Greece|galaxy|mythical creature
-1,8|5|7,1,Venice canals|VR headset|Roman empire
-4,7|3|8,1,ancient Greece|orc|Paris Eiffel Tower
-3,3|4|6,9,dragon|bear|planets
-3,2|1|5,3,palace|waterfall|VR headset
-10,5|7|4,1,android|medieval knights|horse
-7,6|2|3,1,shooting star|ancient temple|mythical creature
-5,7|1|9,10,ancient artifacts|ocean|urban nightlife
-4,4|1|9,8,wolf|mountains|skyscrapers
-4,2|8|9,8,clock tower|New York skyline|modern architecture
-9,4|5|6,3,eagle|cybernetic implants|stars
-6,8|4|6,9,Taj Mahal|rabbit|moon
-6,3|4|7,8,dark sorcerer|rabbit|Viking warriors
-7,9|8|1,7,traffic jams|Paris Eiffel Tower|valley
-9,9|8|3,10,pedestrian crossings|Amazon rainforest|dragon
-7,7|8|3,8,Norse mythology|Amazon rainforest|dark sorcerer
-9,3|4|1,9,mythical creature|eagle|valley
-9,3|5|4,2,mermaid|robotic arm|owl
-4,1|6|8,8,ocean|galaxy|African savanna
-5,4|9|5,6,tiger|urban nightlife|futuristic city
-10,8|1|4,8,Machu Picchu|river|lion
-10,6|5|2,9,asteroid belt|android|medieval village
-6,5|6|4,1,futuristic city|moon|wolf
-2,8|2|3,2,African savanna|pagoda|mermaid
-3,7|2|9,9,Egyptian gods|clock tower|city park
-2,7|8|9,6,Norse mythology|Machu Picchu|skyscrapers
-4,5|9|4,7,cybernetic implants|urban nightlife|rabbit
-6,4|7|2,5,deer|Norse mythology|cathedral
-8,3|1|9,8,orc|mountains|pedestrian crossings
-1,5|9|7,3,flying cars|urban nightlife|Roman empire
-9,7|2|1,7,Norse mythology|castle|valley
-2,5|4|3,6,futuristic city|horse|knight in armor
-2,5|8|7,9,drones|African savanna|Norse mythology
-4,1|5|6,6,forest|neon lights|moon
-1,2|3|9,3,clock tower|unicorn|neon lights
-6,3|5|1,5,dragon|neon lights|mountains
-7,7|6|1,7,Trojan war|stars|forest
-4,5|7|6,5,neon skyline|Trojan war|planets
-4,7|1|4,9,ancient artifacts|valley|rabbit
-10,5|9|3,6,neon lights|bustling streets|fairies
-
+1,1|2|3,8,shiny mountains|ancient temple|dark sorcerer
+1,1|2|3,9,vibrant forest|pagoda|unicorn
+1,1|2|3,7,fluffy ocean|lighthouse|wizard
+1,1|2|3,6,gloomy desert|cathedral|knight in armor
+1,1|2|3,5,colorful beach|castle|dragon
+1,1|2|3,8,shiny river|clock tower|mermaid
+1,1|2|3,7,tiny sunrise|palace|elf warrior
+1,1|2|3,9,sleek valley|bridge|fairies
+1,1|2|3,10,rustic waterfall|ancient temple|orc
+1,1|2|3,6,vibrant sunset|pagoda|mythical creature
+1,1|2|3,7,fluffy sunrise|cathedral|dark sorcerer
+1,1|2|3,8,shiny forest|castle|wizard
+1,1|2|3,5,gloomy mountains|skyscraper|knight in armor
+1,1|2|3,4,sleek beach|lighthouse|fairies
+1,1|2|3,10,rustic desert|bridge|orc
+1,1|2|3,6,colorful valley|clock tower|unicorn
+1,1|2|3,7,tiny river|palace|mermaid
+1,1|2|3,8,vibrant waterfall|pagoda|mythical creature
+1,1|2|3,9,shiny ocean|castle|dragon
+1,1|2|3,8,gloomy sunset|ancient temple|elf warrior

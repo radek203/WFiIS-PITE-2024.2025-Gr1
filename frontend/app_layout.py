@@ -1,5 +1,6 @@
-import streamlit as st
 import os
+
+import streamlit as st
 
 import backend.callbacks as mbc
 
@@ -33,9 +34,9 @@ class App:
         i = st.session_state['last_id'] + 1
         if not st.session_state['is_image_generate'][place_id]:
             tile.write("Generate image")
-            #if st.session_state['tags_rating']:
+            # if st.session_state['tags_rating']:
             #
-            #else:
+            # else:
             prompt, tags = st.session_state['image_generator'].generate_random_prompt(1, st.session_state['category_id'])
             prompt = prompt[0]
             tags = tags[0]
@@ -44,7 +45,7 @@ class App:
             st.session_state['is_image_generate'][place_id] = True
             st.session_state['image_data'][place_id] = [f"images/image{i}.png", st.session_state['current_user'], st.session_state['category_id'], "|".join(tags)]
             st.session_state['last_id'] = i
-            #if not st.session_state['tags_rating']:
+            # if not st.session_state['tags_rating']:
             st.session_state['category_id'] += 1
         img_data = st.session_state['image_data'][place_id]
         tile.image(img_data[0])

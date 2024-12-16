@@ -4,6 +4,7 @@ from sklearn.preprocessing import LabelEncoder, MultiLabelBinarizer
 from surprise import Dataset, Reader
 from surprise import SVD
 from surprise import accuracy
+
 import backend.callbacks as mvc
 
 
@@ -13,26 +14,26 @@ class ScikitImpl:
         self.debug = debug
         # Read the ratings data
         ratings_df = pd.read_csv("data/ratings.csv")
-        self.adjectives_df = pd.read_csv("data/adjectives.csv",header=None)
+        self.adjectives_df = pd.read_csv("data/adjectives.csv", header=None)
         if self.debug:
             # Display all columns in the output
             pd.set_option('display.max_columns', None)
             print(ratings_df)
 
-        # Encode the userId and categoryId columns
+        # Encode the userIds
         self.user_encoder = LabelEncoder()
-
-        # Split the tags column into multiple columns based on the delimiter '|' - It is how the model can understand the tags
-        self.mlb = MultiLabelBinarizer()
         ratings_df['userId'] = self.user_encoder.fit_transform(ratings_df['userId'])
 
-        # ratings_df['categoryId'] = self.category_encoder.fit_transform(ratings_df['categoryId'])
+        # Process only ratings with multiple categories
         data_expanded = pd.DataFrame([
-            {"userId": row.userId, "tag":self.remove_tag(row.tags), "rating": row.rating, "tags":self.remove_tag(row.tags)}
+            {"userId": row.userId, "tag": self.remove_tag(row.tags), "rating": row.rating, "tags": self.remove_tag(row.tags)}
             for _, row in ratings_df.iterrows()
             if '|' in row.categoryId
         ])
-        data_expanded = data_expanded.join(pd.DataFrame(self.mlb.fit_transform(data_expanded.pop('tags').str.split('|')),columns=self.mlb.classes_,index=data_expanded.index))
+
+        # Split the tags column into multiple columns based on the delimiter '|' - It is how the model can understand the tags
+        self.mlb = MultiLabelBinarizer()
+        data_expanded = data_expanded.join(pd.DataFrame(self.mlb.fit_transform(data_expanded.pop('tags').str.split('|')), columns=self.mlb.classes_, index=data_expanded.index))
 
         # Encode the tags
         self.tag_encoder = LabelEncoder()
@@ -42,16 +43,16 @@ class ScikitImpl:
         # Model based on the SVD Singular Value Decomposition algorithm
         self.model_svd = SVD()
 
-    # This function doesn't contain final implementation of choosing categories/tags!
+        # another model - worse RMSE
+        # model_knn = KNNBasic()
+        # model_knn.fit(trainset)
 
-    def remove_tag(self, tag):
-        tag_list = tag.split('|')
-        filtered_list = [tag for tag in tag_list if tag not in self.adjectives_df[0].tolist()]
+    def remove_tag(self, tags):
+        filtered_list = [tag for tag in tags.split('|') if tag not in self.adjectives_df[0].tolist()]
         return '|'.join(filtered_list)
 
     def train(self):
         # 80% training, 20% testing - To learn the model and test it
-        # train_df, test_df = train_test_split(self.ratings_df, test_size=0.2)
         train_df, test_df = train_test_split(self.ratings_df, test_size=0.2)
         # Model must know the range of ratings in the dataset
         reader = Reader(rating_scale=(1, 10))
@@ -64,9 +65,6 @@ class ScikitImpl:
 
         # Train the model
         self.model_svd.fit(trainset)
-        # another model - worse RMSE
-        # model_knn = KNNBasic()
-        # model_knn.fit(trainset)
 
         if self.debug:
             # testset to test the model
@@ -78,21 +76,25 @@ class ScikitImpl:
             # Calculate RMSE on the test set, the lower the value the better, for 1-10 rating scale, we want RMSE to be less than 1 (1 point of rating)
             accuracy.rmse(predictions_test)
 
-
-    def get_top_n_ratings(self,user_id, n=3):
+    def get_top_n_ratings(self, user_id, n=3):
         user_tags = self.ratings_df[(self.ratings_df['userId'] == user_id)]['tag'].unique()
-        # all_tags = self.ratings_df['tag'].unique()
         top_categories = mvc.get_top_n_categories(n, user_id)['categoryId'].head(n).tolist()
-        cat1 = pd.read_csv("data/cat{}.csv".format(top_categories[0]),header=None)[0].head(10)
-        cat2 = pd.read_csv("data/cat{}.csv".format(top_categories[1]),header=None)[0].head(10)
-        cat3 = pd.read_csv("data/cat{}.csv".format(top_categories[2]),header=None)[0].head(10)
-        all_tags = ['|'.join([cat1[i],cat2[j],cat3[k]]) for i in range(10) for j in range(10) for k in range(10)]
+        tags_count = 10 if self.debug else 100
+        cat1 = pd.read_csv("data/cat{}.csv".format(top_categories[0]), header=None)[0].head(tags_count)
+        cat2 = pd.read_csv("data/cat{}.csv".format(top_categories[1]), header=None)[0].head(tags_count)
+        cat3 = pd.read_csv("data/cat{}.csv".format(top_categories[2]), header=None)[0].head(tags_count)
+
+        # Generate all possible tags combinations
+        all_tags = ['|'.join([cat1[i], cat2[j], cat3[k]]) for i in range(tags_count) for j in range(tags_count) for k in range(tags_count)]
         all_tags = self.tag_encoder.fit_transform(all_tags)
+
+        # Remove tags that the user has already rated
         tags_to_predict = list(set(all_tags) - set(user_tags))
-        # Generate user-tag pairs for prediction
+
+        # Generate user-tags pairs for prediction
         user_tag_pairs = [(user_id, tags_ids, 0) for tags_ids in tags_to_predict]
 
-        # Predict ratings for all user-tag pairs
+        # Predict ratings for all user-tags pairs
         predictions_cf = self.model_svd.test(user_tag_pairs)
 
         # Sort predictions by estimated rating in descending order

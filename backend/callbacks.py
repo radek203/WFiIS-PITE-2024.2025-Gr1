@@ -8,10 +8,28 @@ from backend.stablediffusion import StableDiffusion
 from config import config
 
 
+def find_tag_categoryid(tag):
+    for i in range(1,10):
+        filename = f"cat{i}.csv"
+        with open(filename, "r") as file:
+            file_content = file.read()
+            if tag in file_content:
+                return i
+
+
 def rate_callback(user_id, ratings, category_id, tags, place_id):
+    categories = []
+    for tag in tags:
+        category_ID = find_tag_categoryid(tag)
+        if category_ID is not None:
+            categories.append(category_ID)
+    if all(cat == categories[0] for cat in categories):
+        final = str(categories[0])
+    else:
+        final = "|".join(map(str,categories))
     new_row = {
         "userId": user_id,
-        "categoryId": category_id,
+        "categoryId": final,
         "rating": ratings,
         "tags": tags
     }

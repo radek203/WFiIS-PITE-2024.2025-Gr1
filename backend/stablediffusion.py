@@ -1,5 +1,7 @@
 import pandas as pd
+import backend.scikit_impl as sc
 
+from config import config
 
 class StableDiffusion:
 
@@ -32,3 +34,21 @@ class StableDiffusion:
     def generate_image(self, prompt, img_id, steps):
         image = self.model.generate_image(prompt, int(steps))
         image.save("images/image" + str(img_id) + ".png")
+    
+    def generate_prompt_from_best_tags(self, user_id=1, n=3):
+        scikit = sc.ScikitImpl(config['debug'])
+        scikit.train()
+        tags_str, _ = scikit.get_top_n_ratings(user_id, n)
+        tags = tags_str[0].split("|")
+        adjectives = self.get_random_adjectives(n)
+        prompt = ""
+        for i, tag in enumerate(tags):
+            prompt += adjectives.iloc[i].values[0]
+            prompt += " "
+            prompt += tag
+            prompt += " "
+        return prompt
+
+
+
+

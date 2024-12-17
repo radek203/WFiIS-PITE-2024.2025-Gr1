@@ -5,8 +5,7 @@ from surprise import Dataset, Reader
 from surprise import SVD
 from surprise import accuracy
 
-import backend.callbacks as mvc
-
+from backend.utils import get_top_n_categories
 
 class ScikitImpl:
 
@@ -77,7 +76,7 @@ class ScikitImpl:
             accuracy.rmse(predictions_test)
 
     def get_top_n_ratings(self, user_id, n=3):
-        top_categories = mvc.get_top_n_categories(n, user_id)['categoryId'].head(n).tolist()
+        top_categories = get_top_n_categories(n, user_id)['categoryId'].head(n).tolist()
         user_id = self.user_encoder.transform([user_id])[0]
         user_tags = self.ratings_df[(self.ratings_df['userId'] == user_id)]['tag'].unique()
         tags_count = 10 if self.debug else 100

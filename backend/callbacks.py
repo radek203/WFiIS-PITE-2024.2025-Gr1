@@ -18,7 +18,7 @@ def find_tag_category_id(tag):
 
 def rate_callback(user_id, ratings, category_id, tags, place_id):
     categories = []
-    for tag in tags:
+    for tag in tags.split('|'):
         category_id = find_tag_category_id(tag)
         if category_id is not None:
             categories.append(category_id)

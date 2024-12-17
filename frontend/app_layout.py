@@ -29,24 +29,31 @@ class App:
         self.KEY_ID = 0
         st.session_state['last_id'] = mbc.get_number_of_rows()
 
-    def create_image_container(self, parent, place_id):
+    def create_image_categories_container(self, parent, place_id):
         tile = parent.container()
         i = st.session_state['last_id'] + 1
         if not st.session_state['is_image_generate'][place_id]:
             tile.write("Generate image")
-            # if st.session_state['tags_rating']:
-            #
-            # else:
-            prompt, tags = st.session_state['image_generator'].generate_random_prompt(1, st.session_state['category_id'])
-            prompt = prompt[0]
-            tags = tags[0]
+            prompt, tags = st.session_state['image_generator'].generate_random_prompt(st.session_state['category_id'])
             print(prompt, tags)
             st.session_state['image_generator'].generate_image(prompt, i, st.session_state['steps'])
             st.session_state['is_image_generate'][place_id] = True
             st.session_state['image_data'][place_id] = [f"images/image{i}.png", st.session_state['current_user'], st.session_state['category_id'], "|".join(tags)]
             st.session_state['last_id'] = i
-            # if not st.session_state['tags_rating']:
             st.session_state['category_id'] += 1
+        img_data = st.session_state['image_data'][place_id]
+        tile.image(img_data[0])
+
+    def create_image_tags_container(self, parent, place_id, prompt, tags):
+        tile = parent.container()
+        i = st.session_state['last_id'] + 1
+        if not st.session_state['is_image_generate'][place_id]:
+            tile.write("Generate image")
+            print(prompt, tags)
+            st.session_state['image_generator'].generate_image(prompt, i, st.session_state['steps'])
+            st.session_state['is_image_generate'][place_id] = True
+            st.session_state['image_data'][place_id] = [f"images/image{i}.png", st.session_state['current_user'], 0, "|".join(tags)]
+            st.session_state['last_id'] = i
         img_data = st.session_state['image_data'][place_id]
         tile.image(img_data[0])
 
@@ -86,5 +93,12 @@ class App:
             row1 = images_box.columns(3)
             row2 = images_box.columns(3)
             row3 = images_box.columns(3)
-            display_components(row1 + row2 + row3, self.create_image_container)
+            if st.session_state['tags_rating']:
+                prompts, tags = st.session_state['image_generator'].generate_prompt_from_best_tags(st.session_state['current_user'])
+                place_id = 0
+                for col in row1 + row2 + row3:
+                    self.create_image_tags_container(col, place_id, prompts[place_id], tags[place_id])
+                    place_id += 1
+            else:
+                display_components(row1 + row2 + row3, self.create_image_categories_container)
             display_components(row1 + row2 + row3, self.create_rating_component)

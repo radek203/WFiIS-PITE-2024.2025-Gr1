@@ -3,14 +3,13 @@ import streamlit as st
 
 from backend.utils import get_top_n_categories
 from backend.models import ImageModel
-from backend.scikit_impl import ScikitImpl
 from backend.stablediffusion import StableDiffusion
 from config import config
 
 
-def find_tag_categoryid(tag):
-    for i in range(1,10):
-        filename = f"cat{i}.csv"
+def find_tag_category_id(tag):
+    for i in range(1, 10):
+        filename = f"data/cat{i}.csv"
         with open(filename, "r") as file:
             file_content = file.read()
             if tag in file_content:
@@ -20,9 +19,9 @@ def find_tag_categoryid(tag):
 def rate_callback(user_id, ratings, category_id, tags, place_id):
     categories = []
     for tag in tags:
-        category_ID = find_tag_categoryid(tag)
-        if category_ID is not None:
-            categories.append(category_ID)
+        category_id = find_tag_category_id(tag)
+        if category_id is not None:
+            categories.append(category_id)
     if all(cat == categories[0] for cat in categories):
         final = str(categories[0])
     else:
@@ -40,7 +39,6 @@ def rate_callback(user_id, ratings, category_id, tags, place_id):
 
 def regenerate_images():
     if False not in st.session_state['is_image_rated'].values():
-        calculate_ratings(st.session_state['current_user'])
         print(get_top_n_categories(3, st.session_state['current_user']))
         for i in range(9):
             st.session_state['is_image_rated'][i] = False
@@ -73,13 +71,6 @@ def change_user_callback():
         selected_user = 1 if len(existing_users) == 0 else (int(existing_users[-1]) + 1)
     st.session_state['current_user'] = int(selected_user)
     print("Selected user:", selected_user)
-
-
-def calculate_ratings(user_id):
-    scikit = ScikitImpl(config['debug'])
-    scikit.train()
-    ids, ratings = scikit.get_top_n_ratings(user_id, 3)
-    print(f"IDs: {ids}", f"Ratings: {ratings}")
 
 
 def change_model_callback(layout):

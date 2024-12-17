@@ -104,7 +104,7 @@ class ScikitImpl:
             print("Top N ratings:", top_n_recommendations)
 
         # Decode the top tags and retrieve their predicted ratings
-        top_tags_ids = [self.tag_encoder.inverse_transform([pred.iid])[0] for pred in top_n_recommendations]
+        top_tags = [self.tag_encoder.inverse_transform([pred.iid])[0] for pred in top_n_recommendations]
         predicted_ratings = [pred.est for pred in top_n_recommendations]
 
-        return top_tags_ids, predicted_ratings
+        return top_tags, predicted_ratings

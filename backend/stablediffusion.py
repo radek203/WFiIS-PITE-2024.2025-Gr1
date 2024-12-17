@@ -18,37 +18,36 @@ class StableDiffusion:
     def get_random_tags(self, n, category_id):
         return self.tags[category_id - 1].sample(n)
 
-    def generate_random_prompt(self, n, category_id):
-        adjectives = self.get_random_adjectives(n)
-        tags = self.get_random_tags(n, category_id)
-        all_tags = [[] for _ in range(n)]
-        prompts = []
-        for i in range(n):
-            tag_f = adjectives.iloc[i].values[0]
-            tag_s = tags.iloc[i].values[0]
-            prompts.append(tag_f + " " + tag_s)
-            all_tags[i].append(tag_f)
-            all_tags[i].append(tag_s)
-        return prompts, all_tags
+    def generate_random_prompt(self, category_id):
+        adjectives = self.get_random_adjectives(1)
+        tags = self.get_random_tags(1, category_id)
+        tag_f = adjectives.iloc[0].values[0]
+        tag_s = tags.iloc[0].values[0]
+        prompt = tag_f + " " + tag_s
+        final_tags = [tag_f, tag_s]
+        return prompt, final_tags
 
     def generate_image(self, prompt, img_id, steps):
         image = self.model.generate_image(prompt, int(steps))
         image.save("images/image" + str(img_id) + ".png")
-    
-    def generate_prompt_from_best_tags(self, user_id=1, n=3):
+
+    # This function should return n (9) best prompts
+    def generate_prompt_from_best_tags(self, user_id, n=9):
         scikit = sc.ScikitImpl(config['debug'])
         scikit.train()
-        tags_str, _ = scikit.get_top_n_ratings(user_id, n)
-        tags = tags_str[0].split("|")
-        adjectives = self.get_random_adjectives(n)
-        prompt = ""
-        for i, tag in enumerate(tags):
-            prompt += adjectives.iloc[i].values[0]
-            prompt += " "
-            prompt += tag
-            prompt += " "
-        return prompt
-
-
-
-
+        tags_combinations, _ = scikit.get_top_n_ratings(user_id, n)
+        prompts = []
+        all_tags = [[] for _ in range(n)]
+        for i, tags in enumerate(tags_combinations):
+            tags = tags.split("|")
+            adjectives = self.get_random_adjectives(3)
+            prompt = ""
+            for j, tag in enumerate(tags):
+                tag_f = adjectives.iloc[j].values[0]
+                tag_s = tag
+                prompt += tag_f + " " + tag_s + " and "
+                all_tags[i].append(tag_f)
+                all_tags[i].append(tag_s)
+            prompt = prompt[:-5]
+            prompts.append(prompt)
+        return prompts, all_tags

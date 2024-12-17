@@ -66,7 +66,7 @@ def get_existing_users():
 
 def change_user_callback():
     selected_user = st.session_state["user_selection"]
-    if selected_user == "Create New User (Last Id + 1)":
+    if selected_user == "Create New User":
         existing_users = get_existing_users()
         selected_user = 1 if len(existing_users) == 0 else (int(existing_users[-1]) + 1)
     st.session_state['current_user'] = int(selected_user)

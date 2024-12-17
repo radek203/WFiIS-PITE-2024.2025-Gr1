@@ -107,4 +107,4 @@ class ScikitImpl:
         top_tags = [self.tag_encoder.inverse_transform([pred.iid])[0] for pred in top_n_recommendations]
         predicted_ratings = [pred.est for pred in top_n_recommendations]
 
-        return top_tags, predicted_ratings
+        return top_tags, predicted_ratings, top_categories

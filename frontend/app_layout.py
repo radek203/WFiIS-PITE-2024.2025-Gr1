@@ -5,10 +5,13 @@ import streamlit as st
 import backend.callbacks as mbc
 
 
-def display_components(rows, method):
+def display_components(rows, method, prompts, tags):
     place_id = 0
     for col in rows:
-        method(col, place_id)
+        if place_id < len(prompts):
+            method(col, place_id, prompts[place_id], tags[place_id])
+        else:
+            method(col, place_id, "", "")
         place_id += 1
 
 
@@ -17,7 +20,6 @@ class App:
     st.session_state['is_image_rated'] = {0: False, 1: False, 2: False, 3: False, 4: False, 5: False, 6: False, 7: False, 8: False}
     st.session_state['image_data'] = {0: [None, 0, 0, ''], 1: [None, 0, 0, ''], 2: [None, 0, 0, '']}
     st.session_state['last_id'] = 0
-    st.session_state['category_id'] = 1
     st.session_state['current_user'] = 0
     st.session_state['steps'] = 0
     st.session_state['model'] = None
@@ -29,22 +31,7 @@ class App:
         self.KEY_ID = 0
         st.session_state['last_id'] = mbc.get_number_of_rows()
 
-    def create_image_categories_container(self, parent, place_id):
-        tile = parent.container()
-        i = st.session_state['last_id'] + 1
-        if not st.session_state['is_image_generate'][place_id]:
-            tile.write("Generate image")
-            prompt, tags = st.session_state['image_generator'].generate_random_prompt(st.session_state['category_id'])
-            print(prompt, tags)
-            st.session_state['image_generator'].generate_image(prompt, i, st.session_state['steps'])
-            st.session_state['is_image_generate'][place_id] = True
-            st.session_state['image_data'][place_id] = [f"images/image{i}.png", st.session_state['current_user'], st.session_state['category_id'], "|".join(tags)]
-            st.session_state['last_id'] = i
-            st.session_state['category_id'] += 1
-        img_data = st.session_state['image_data'][place_id]
-        tile.image(img_data[0])
-
-    def create_image_tags_container(self, parent, place_id, prompt, tags):
+    def create_image_container(self, parent, place_id, prompt, tags):
         tile = parent.container()
         i = st.session_state['last_id'] + 1
         if not st.session_state['is_image_generate'][place_id]:
@@ -57,7 +44,7 @@ class App:
         img_data = st.session_state['image_data'][place_id]
         tile.image(img_data[0])
 
-    def create_rating_component(self, tile, place_id):
+    def create_rating_component(self, tile, place_id, prompt, tags):
         if not st.session_state['is_image_rated'][place_id]:
             img_data = st.session_state['image_data'][place_id]
             rating = tile.slider("Rating", 1, 10, key=self.KEY_ID)
@@ -71,7 +58,7 @@ class App:
         box = st.empty()
         if st.session_state['current_user'] == 0:
             users = [str(user) for user in mbc.get_existing_users()]
-            box.selectbox("Select user", [""] + users + ["Create New User (Last Id + 1)"], key="user_selection", on_change=mbc.change_user_callback)
+            box.selectbox("Select user", [""] + users + ["Create New User"], key="user_selection", on_change=mbc.change_user_callback)
         elif 'image_generator' not in st.session_state:
             box.selectbox("Select model", ["", "SD35L", "SD35LT", "SD3MD", "SDXL1"], key="model_selection", on_change=mbc.change_model_callback, args=(box,))
         elif st.session_state['steps'] == 0:
@@ -94,11 +81,8 @@ class App:
             row2 = images_box.columns(3)
             row3 = images_box.columns(3)
             if st.session_state['tags_rating']:
-                prompts, tags = st.session_state['image_generator'].generate_prompt_from_best_tags(st.session_state['current_user'])
-                place_id = 0
-                for col in row1 + row2 + row3:
-                    self.create_image_tags_container(col, place_id, prompts[place_id], tags[place_id])
-                    place_id += 1
+                prompts, tags, categories = st.session_state['image_generator'].generate_prompt_from_best_tags(st.session_state['current_user'])
             else:
-                display_components(row1 + row2 + row3, self.create_image_categories_container)
-            display_components(row1 + row2 + row3, self.create_rating_component)
+                prompts, tags, categories = st.session_state['image_generator'].generate_random_prompts()
+            display_components(row1 + row2 + row3, self.create_image_container, prompts, tags)
+            display_components(row1 + row2 + row3, self.create_rating_component, [], [])

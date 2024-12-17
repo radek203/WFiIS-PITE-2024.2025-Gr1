@@ -18,14 +18,20 @@ class StableDiffusion:
     def get_random_tags(self, n, category_id):
         return self.tags[category_id - 1].sample(n)
 
-    def generate_random_prompt(self, category_id):
-        adjectives = self.get_random_adjectives(1)
-        tags = self.get_random_tags(1, category_id)
-        tag_f = adjectives.iloc[0].values[0]
-        tag_s = tags.iloc[0].values[0]
-        prompt = tag_f + " " + tag_s
-        final_tags = [tag_f, tag_s]
-        return prompt, final_tags
+    def generate_random_prompts(self):
+        prompts = []
+        categories = [i for i in range(1, 10)]
+        all_tags = [[] for _ in categories]
+        for category_id in categories:
+            adjectives = self.get_random_adjectives(1)
+            tags = self.get_random_tags(1, category_id)
+            tag_f = adjectives.iloc[0].values[0]
+            tag_s = tags.iloc[0].values[0]
+            prompt = tag_f + " " + tag_s
+            all_tags[category_id - 1].append(tag_f)
+            all_tags[category_id - 1].append(tag_s)
+            prompts.append(prompt)
+        return prompts, all_tags, categories
 
     def generate_image(self, prompt, img_id, steps):
         image = self.model.generate_image(prompt, int(steps))
@@ -35,7 +41,7 @@ class StableDiffusion:
     def generate_prompt_from_best_tags(self, user_id, n=9):
         scikit = sc.ScikitImpl(config['debug'])
         scikit.train()
-        tags_combinations, _ = scikit.get_top_n_ratings(user_id, n)
+        tags_combinations, _, top_categories = scikit.get_top_n_ratings(user_id, n)
         prompts = []
         all_tags = [[] for _ in range(n)]
         for i, tags in enumerate(tags_combinations):
@@ -50,4 +56,4 @@ class StableDiffusion:
                 all_tags[i].append(tag_s)
             prompt = prompt[:-5]
             prompts.append(prompt)
-        return prompts, all_tags
+        return prompts, all_tags, top_categories

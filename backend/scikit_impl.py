@@ -76,7 +76,7 @@ class ScikitImpl:
             accuracy.rmse(predictions_test)
 
     def get_top_n_ratings(self, user_id, n=3):
-        top_categories = get_top_n_categories(n, user_id)['categoryId'].head(n).tolist()
+        top_categories = sorted(get_top_n_categories(n, user_id)['categoryId'].head(n).tolist())
         user_id = self.user_encoder.transform([user_id])[0]
         user_tags = self.ratings_df[(self.ratings_df['userId'] == user_id)]['tag'].unique()
         tags_count = 10 if self.debug else 100
@@ -86,10 +86,10 @@ class ScikitImpl:
 
         # Generate all possible tags combinations
         all_tags = ['|'.join([cat1[i], cat2[j], cat3[k]]) for i in range(tags_count) for j in range(tags_count) for k in range(tags_count)]
-        all_tags = self.tag_encoder.fit_transform(all_tags)
 
         # Remove tags that the user has already rated
         tags_to_predict = list(set(all_tags) - set(user_tags))
+        tags_to_predict = self.tag_encoder.fit_transform(tags_to_predict)
 
         # Generate user-tags pairs for prediction
         user_tag_pairs = [(user_id, tags_ids, 0) for tags_ids in tags_to_predict]

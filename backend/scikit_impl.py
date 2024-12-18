@@ -4,6 +4,7 @@ from sklearn.preprocessing import LabelEncoder, MultiLabelBinarizer
 from surprise import Dataset, Reader
 from surprise import SVD
 from surprise import accuracy
+import streamlit as st
 
 from backend.utils import get_top_n_categories
 
@@ -76,18 +77,19 @@ class ScikitImpl:
             accuracy.rmse(predictions_test)
 
     def get_top_n_ratings(self, user_id, n=3):
-        top_categories = sorted(get_top_n_categories(n, user_id)['categoryId'].head(n).tolist())
+        top_categories = sorted(get_top_n_categories(3, user_id)['categoryId'].tolist())
         user_id = self.user_encoder.transform([user_id])[0]
         user_tags = self.ratings_df[(self.ratings_df['userId'] == user_id)]['tag'].unique()
         tags_count = 10 if self.debug else 100
-        cat1 = pd.read_csv("data/cat{}.csv".format(top_categories[0]), header=None)[0].head(tags_count)
-        cat2 = pd.read_csv("data/cat{}.csv".format(top_categories[1]), header=None)[0].head(tags_count)
-        cat3 = pd.read_csv("data/cat{}.csv".format(top_categories[2]), header=None)[0].head(tags_count)
+        cat1 = st.session_state['image_generator'].get_random_tags(tags_count, int(top_categories[0])).iloc[0:tags_count, 0].tolist()
+        cat2 = st.session_state['image_generator'].get_random_tags(tags_count, int(top_categories[1])).iloc[0:tags_count, 0].tolist()
+        cat3 = st.session_state['image_generator'].get_random_tags(tags_count, int(top_categories[2])).iloc[0:tags_count, 0].tolist()
 
         # Generate all possible tags combinations
         all_tags = ['|'.join([cat1[i], cat2[j], cat3[k]]) for i in range(tags_count) for j in range(tags_count) for k in range(tags_count)]
 
         # Remove tags that the user has already rated
+        user_tags = self.tag_encoder.inverse_transform(user_tags)
         tags_to_predict = list(set(all_tags) - set(user_tags))
         tags_to_predict = self.tag_encoder.fit_transform(tags_to_predict)
 

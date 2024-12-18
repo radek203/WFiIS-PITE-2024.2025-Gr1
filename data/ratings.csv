@@ -117,23 +117,23 @@ userId,categoryId,rating,tags
 1,7,2,sleek|Roman empire
 1,8,2,massive|African savanna
 1,9,8,cheerful|modern architecture
-1,1|2|3,8,shiny mountains|ancient temple|dark sorcerer
-1,1|2|3,9,vibrant forest|pagoda|unicorn
-1,1|2|3,7,fluffy ocean|lighthouse|wizard
-1,1|2|3,6,gloomy desert|cathedral|knight in armor
-1,1|2|3,5,colorful beach|castle|dragon
-1,1|2|3,8,shiny river|clock tower|mermaid
-1,1|2|3,7,tiny sunrise|palace|elf warrior
-1,1|2|3,9,sleek valley|bridge|fairies
-1,1|2|3,10,rustic waterfall|ancient temple|orc
-1,1|2|3,6,vibrant sunset|pagoda|mythical creature
-1,1|2|3,7,fluffy sunrise|cathedral|dark sorcerer
-1,1|2|3,8,shiny forest|castle|wizard
-1,1|2|3,5,gloomy mountains|skyscraper|knight in armor
-1,1|2|3,4,sleek beach|lighthouse|fairies
-1,1|2|3,10,rustic desert|bridge|orc
-1,1|2|3,6,colorful valley|clock tower|unicorn
-1,1|2|3,7,tiny river|palace|mermaid
-1,1|2|3,8,vibrant waterfall|pagoda|mythical creature
-1,1|2|3,9,shiny ocean|castle|dragon
-1,1|2|3,8,gloomy sunset|ancient temple|elf warrior
+1,1|2|3,8,mountains|ancient temple|dark sorcerer
+1,1|2|3,9,forest|pagoda|unicorn
+1,1|2|3,7,ocean|lighthouse|wizard
+1,1|2|3,6,desert|cathedral|knight in armor
+1,1|2|3,5,beach|castle|dragon
+1,1|2|3,8,river|clock tower|mermaid
+1,1|2|3,7,sunrise|palace|elf warrior
+1,1|2|3,9,valley|bridge|fairies
+1,1|2|3,10,waterfall|ancient temple|orc
+1,1|2|3,6,sunset|pagoda|mythical creature
+1,1|2|3,7,sunrise|cathedral|dark sorcerer
+1,1|2|3,8,forest|castle|wizard
+1,1|2|3,5,mountains|skyscraper|knight in armor
+1,1|2|3,4,beach|lighthouse|fairies
+1,1|2|3,10,desert|bridge|orc
+1,1|2|3,6,valley|clock tower|unicorn
+1,1|2|3,7,river|palace|mermaid
+1,1|2|3,8,waterfall|pagoda|mythical creature
+1,1|2|3,9,ocean|castle|dragon
+1,1|2|3,8,sunset|ancient temple|elf warrior

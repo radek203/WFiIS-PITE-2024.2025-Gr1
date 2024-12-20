@@ -1,7 +1,8 @@
 import pandas as pd
-import backend.scikit_impl as sc
 
+import backend.scikit_impl as sc
 from config import config
+
 
 class StableDiffusion:
 
@@ -21,7 +22,7 @@ class StableDiffusion:
 
     def generate_random_prompts(self):
         prompts = []
-        categories = [[i,] for i in range(1, 10)]
+        categories = [[i, ] for i in range(1, 10)]
         all_tags = [[] for _ in categories]
         for category_id in categories:
             category_id = category_id[0]

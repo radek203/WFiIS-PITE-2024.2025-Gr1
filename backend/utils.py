@@ -1,4 +1,4 @@
-import pandas as pd 
+import pandas as pd
 
 
 def get_top_n_categories(n, user_id):

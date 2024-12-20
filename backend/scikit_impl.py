@@ -7,6 +7,7 @@ from surprise import accuracy
 
 from backend.utils import get_top_n_categories
 
+
 class ScikitImpl:
 
     def __init__(self, debug=False):

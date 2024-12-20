@@ -3,7 +3,7 @@ import os
 import streamlit as st
 
 import backend.callbacks as cb
-from backend.utils import get_number_of_rows
+from backend.utils import get_number_of_rows, get_user_images
 
 
 def display_components(rows, method, prompts, tags, categories):
@@ -40,17 +40,16 @@ class App:
             print(prompt, tags)
             st.session_state['image_generator'].generate_image(prompt, i, st.session_state['steps'])
             st.session_state['is_image_generate'][place_id] = True
-            st.session_state['image_data'][place_id] = [f"images/image{i}.png", '|'.join(map(str, categories)), "|".join(tags)]
+            st.session_state['image_data'][place_id] = [i, '|'.join(map(str, categories)), "|".join(tags)]
             st.session_state['last_id'] = i
         img_data = st.session_state['image_data'][place_id]
-        tile.image(img_data[0])
+        tile.image(f"images/image{img_data[0]}.png")
 
     def create_rating_component(self, tile, place_id, prompt, tags, categories):
         if not st.session_state['is_image_rated'][place_id]:
-            img_data = st.session_state['image_data'][place_id]
             rating = tile.slider("Rating", 1, 10, key=self.KEY_ID)
             self.KEY_ID += 1
-            tile.button("Rate", key=self.KEY_ID, use_container_width=True, on_click=cb.rate_callback, args=(rating, img_data[1], img_data[2], place_id))
+            tile.button("Rate", key=self.KEY_ID, use_container_width=True, on_click=cb.rate_callback, args=(rating, st.session_state['image_data'][place_id], place_id))
             self.KEY_ID += 1
 
     def create_layout(self):
@@ -67,15 +66,15 @@ class App:
         elif st.session_state['decision_buttons']:
             box.selectbox("Select next step", ["", "Generate more images to rate categories", "Go to generating images based on tags from best rated categories only", "Show all generated images"], key="next_step_selection", on_change=cb.next_step_selection_callback)
         elif st.session_state['show_all']:
-            png_files = [file for file in os.listdir("images") if file.endswith('.png')]
             images_box = box.container(border=True)
             row = images_box.columns(3)
             i = 0
-            for file in png_files:
-                if i % 3 == 0:
-                    row = images_box.columns(3)
-                row[i % 3].container().image(f"images/{file}")
-                i += 1
+            for img_id in get_user_images(st.session_state['current_user']):
+                if os.path.isfile(f"images/image{img_id}.png"):
+                    if i % 3 == 0:
+                        row = images_box.columns(3)
+                    row[i % 3].container().image(f"images/image{img_id}.png")
+                    i += 1
         else:
             images_box = box.container(border=True)
             row1 = images_box.columns(3)

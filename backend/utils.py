@@ -10,6 +10,12 @@ def get_top_n_categories(n, user_id):
     return top_category
 
 
+def get_user_images(user_id):
+    data = pd.read_csv("data/ratings.csv")
+    specific_user_data = data[data["userId"] == user_id]
+    return specific_user_data["id"].values
+
+
 def save_row_to_file(new_row):
     data = pd.read_csv("data/ratings.csv")
     new_row_df = pd.DataFrame([new_row], columns=data.columns)

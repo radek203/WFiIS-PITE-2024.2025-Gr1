@@ -6,13 +6,14 @@ from backend.utils import save_row_to_file, get_existing_users
 from config import config
 
 
-def rate_callback(ratings, categories, tags, place_id):
+def rate_callback(ratings, img_data, place_id):
     st.session_state['is_image_rated'][place_id] = True
     save_row_to_file({
+        "id": img_data[0],
         "userId": st.session_state['current_user'],
-        "categoryId": categories,
+        "categoryId": img_data[1],
         "rating": ratings,
-        "tags": tags
+        "tags": img_data[2]
     })
     regenerate_images()
 

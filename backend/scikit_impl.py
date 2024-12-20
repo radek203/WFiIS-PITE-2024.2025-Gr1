@@ -4,7 +4,6 @@ from sklearn.preprocessing import LabelEncoder, MultiLabelBinarizer
 from surprise import Dataset, Reader
 from surprise import SVD
 from surprise import accuracy
-import streamlit as st
 
 from backend.utils import get_top_n_categories
 
@@ -72,14 +71,14 @@ class ScikitImpl:
             # Calculate RMSE on the test set, the lower the value the better, for 1-10 rating scale, we want RMSE to be less than 1 (1 point of rating)
             accuracy.rmse(predictions_test)
 
-    def get_top_n_ratings(self, user_id, n=3):
+    def get_top_n_ratings(self, sd, user_id, n=3):
         top_categories = sorted(get_top_n_categories(3, user_id)['categoryId'].tolist())
         user_id = self.user_encoder.transform([user_id])[0]
         user_tags = self.ratings_df[(self.ratings_df['userId'] == user_id)]['tag'].unique()
         tags_count = 10 if self.debug else 100
-        cat1 = st.session_state['image_generator'].get_random_tags(tags_count, int(top_categories[0])).iloc[0:tags_count, 0].tolist()
-        cat2 = st.session_state['image_generator'].get_random_tags(tags_count, int(top_categories[1])).iloc[0:tags_count, 0].tolist()
-        cat3 = st.session_state['image_generator'].get_random_tags(tags_count, int(top_categories[2])).iloc[0:tags_count, 0].tolist()
+        cat1 = sd.get_random_tags(tags_count, int(top_categories[0])).iloc[0:tags_count, 0].tolist()
+        cat2 = sd.get_random_tags(tags_count, int(top_categories[1])).iloc[0:tags_count, 0].tolist()
+        cat3 = sd.get_random_tags(tags_count, int(top_categories[2])).iloc[0:tags_count, 0].tolist()
 
         # Generate all possible tags combinations
         all_tags = ['|'.join([cat1[i], cat2[j], cat3[k]]) for i in range(tags_count) for j in range(tags_count) for k in range(tags_count)]

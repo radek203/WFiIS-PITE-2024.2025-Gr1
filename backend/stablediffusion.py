@@ -42,7 +42,7 @@ class StableDiffusion:
     def generate_prompt_from_best_tags(self, user_id, n=9):
         scikit = sc.ScikitImpl(config['debug'])
         scikit.train()
-        tags_combinations, top_categories = scikit.get_top_n_ratings(user_id, n)
+        tags_combinations, top_categories = scikit.get_top_n_ratings(self, user_id, n)
         prompts = []
         all_tags = [[] for _ in range(n)]
         for i, tags in enumerate(tags_combinations):

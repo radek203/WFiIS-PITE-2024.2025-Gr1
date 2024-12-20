@@ -1,20 +1,19 @@
-import pandas as pd
 import streamlit as st
 
 from backend.models import ImageModel
 from backend.stablediffusion import StableDiffusion
+from backend.utils import save_row_to_file, get_existing_users
 from config import config
 
 
-def rate_callback(user_id, ratings, categories, tags, place_id):
-    new_row = {
-        "userId": user_id,
+def rate_callback(ratings, categories, tags, place_id):
+    st.session_state['is_image_rated'][place_id] = True
+    save_row_to_file({
+        "userId": st.session_state['current_user'],
         "categoryId": categories,
         "rating": ratings,
         "tags": tags
-    }
-    st.session_state['is_image_rated'][place_id] = True
-    save_row_to_file(new_row)
+    })
     regenerate_images()
 
 
@@ -25,23 +24,6 @@ def regenerate_images():
             st.session_state['is_image_generate'][i] = False
         st.session_state['category_id'] = 1
         st.session_state['decision_buttons'] = True
-
-
-def save_row_to_file(new_row):
-    data = pd.read_csv("data/ratings.csv")
-    new_row_df = pd.DataFrame([new_row], columns=data.columns)
-    updated_data = pd.concat([data, new_row_df], ignore_index=True)
-    updated_data.to_csv("data/ratings.csv", index=False)
-
-
-def get_number_of_rows():
-    data = pd.read_csv("data/ratings.csv")
-    return data.shape[0]
-
-
-def get_existing_users():
-    data = pd.read_csv("data/ratings.csv")
-    return data.userId.unique()
 
 
 def change_user_callback():
@@ -67,7 +49,7 @@ def change_steps_callback():
     print("Steps:", steps)
 
 
-def next_step_selection():
+def next_step_selection_callback():
     next_step = st.session_state['next_step_selection']
     st.session_state['decision_buttons'] = False
     st.session_state['tags_rating'] = False

@@ -2,7 +2,8 @@ import os
 
 import streamlit as st
 
-import backend.callbacks as mbc
+import backend.callbacks as cb
+from backend.utils import get_number_of_rows
 
 
 def display_components(rows, method, prompts, tags, categories):
@@ -18,7 +19,7 @@ def display_components(rows, method, prompts, tags, categories):
 class App:
     st.session_state['is_image_generate'] = {0: False, 1: False, 2: False, 3: False, 4: False, 5: False, 6: False, 7: False, 8: False}
     st.session_state['is_image_rated'] = {0: False, 1: False, 2: False, 3: False, 4: False, 5: False, 6: False, 7: False, 8: False}
-    st.session_state['image_data'] = {0: [None, 0, 0, ''], 1: [None, 0, 0, ''], 2: [None, 0, 0, '']}
+    st.session_state['image_data'] = {}
     st.session_state['last_id'] = 0
     st.session_state['current_user'] = 0
     st.session_state['steps'] = 0
@@ -29,7 +30,7 @@ class App:
 
     def __init__(self):
         self.KEY_ID = 0
-        st.session_state['last_id'] = mbc.get_number_of_rows()
+        st.session_state['last_id'] = get_number_of_rows()
 
     def create_image_container(self, parent, place_id, prompt, tags, categories):
         tile = parent.empty()
@@ -39,7 +40,7 @@ class App:
             print(prompt, tags)
             st.session_state['image_generator'].generate_image(prompt, i, st.session_state['steps'])
             st.session_state['is_image_generate'][place_id] = True
-            st.session_state['image_data'][place_id] = [f"images/image{i}.png", st.session_state['current_user'], '|'.join(map(str, categories)), "|".join(tags)]
+            st.session_state['image_data'][place_id] = [f"images/image{i}.png", '|'.join(map(str, categories)), "|".join(tags)]
             st.session_state['last_id'] = i
         img_data = st.session_state['image_data'][place_id]
         tile.image(img_data[0])
@@ -49,7 +50,7 @@ class App:
             img_data = st.session_state['image_data'][place_id]
             rating = tile.slider("Rating", 1, 10, key=self.KEY_ID)
             self.KEY_ID += 1
-            tile.button("Rate", key=self.KEY_ID, use_container_width=True, on_click=mbc.rate_callback, args=(img_data[1], rating, img_data[2], img_data[3], place_id))
+            tile.button("Rate", key=self.KEY_ID, use_container_width=True, on_click=cb.rate_callback, args=(rating, img_data[1], img_data[2], place_id))
             self.KEY_ID += 1
 
     def create_layout(self):
@@ -57,14 +58,14 @@ class App:
         container.write("Welcome! Please rate all the images below. Based on your opinion app will generate images for you!")
         box = st.empty()
         if st.session_state['current_user'] == 0:
-            users = [str(user) for user in mbc.get_existing_users()]
-            box.selectbox("Select user", [""] + users + ["Create New User"], key="user_selection", on_change=mbc.change_user_callback)
+            users = [str(user) for user in cb.get_existing_users()]
+            box.selectbox("Select user", [""] + users + ["Create New User"], key="user_selection", on_change=cb.change_user_callback)
         elif 'image_generator' not in st.session_state:
-            box.selectbox("Select model", ["", "SD35L", "SD35LT", "SD3MD", "SDXL1"], key="model_selection", on_change=mbc.change_model_callback, args=(box,))
+            box.selectbox("Select model", ["", "SD35L", "SD35LT", "SD3MD", "SDXL1"], key="model_selection", on_change=cb.change_model_callback, args=(box,))
         elif st.session_state['steps'] == 0:
-            box.number_input("Number of steps", key="steps_input", min_value=0, step=1, on_change=mbc.change_steps_callback)
+            box.number_input("Number of steps", key="steps_input", min_value=0, step=1, on_change=cb.change_steps_callback)
         elif st.session_state['decision_buttons']:
-            box.selectbox("Select next step", ["", "Generate more images to rate categories", "Go to generating images based on tags from best rated categories only", "Show all generated images"], key="next_step_selection", on_change=mbc.next_step_selection)
+            box.selectbox("Select next step", ["", "Generate more images to rate categories", "Go to generating images based on tags from best rated categories only", "Show all generated images"], key="next_step_selection", on_change=cb.next_step_selection_callback)
         elif st.session_state['show_all']:
             png_files = [file for file in os.listdir("images") if file.endswith('.png')]
             images_box = box.container(border=True)

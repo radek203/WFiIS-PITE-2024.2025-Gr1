@@ -11,9 +11,9 @@ class ImageModel(ABC):
     @abstractmethod
     def __init__(self):
         self.model_id = None
+        self.guidance_scale = None
         self.pipeline = None
         self.refiner = None
-        pass
 
     @abstractmethod
     def setup_pipeline(self):
@@ -23,7 +23,7 @@ class ImageModel(ABC):
         image = self.pipeline(
             prompt=prompt,
             num_inference_steps=steps,
-            guidance_scale=4.5,
+            guidance_scale=self.guidance_scale,
             max_sequence_length=512,
         ).images[0]
         return image
@@ -44,6 +44,7 @@ class ImageModelSD35LT(ImageModel):
 
     def __init__(self):
         self.model_id = "stabilityai/stable-diffusion-3.5-large-turbo"
+        self.guidance_scale = 0
 
     def setup_pipeline(self):
         nf4_config = BitsAndBytesConfig(
@@ -73,6 +74,7 @@ class ImageModelSD35L(ImageModel):
 
     def __init__(self):
         self.model_id = "stabilityai/stable-diffusion-3.5-large"
+        self.guidance_scale = 12.5
 
     def setup_pipeline(self):
         nf4_config = BitsAndBytesConfig(
@@ -99,6 +101,7 @@ class ImageModelSD3MD(ImageModel):
 
     def __init__(self):
         self.model_id = "stabilityai/stable-diffusion-3-medium-diffusers"
+        self.guidance_scale = 7.0
 
     def setup_pipeline(self):
         self.pipeline = StableDiffusion3Pipeline.from_pretrained(

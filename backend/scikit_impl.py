@@ -24,16 +24,19 @@ class ScikitImpl:
         data_expanded = pd.DataFrame([
             {"userId": row.userId, "tag": self.remove_tag(row.tags), "rating": row.rating, "tags": self.remove_tag(row.tags)}
             for _, row in ratings_df.iterrows()
-            if '|' in row.categoryId
+            if '|' in str(row.categoryId)
         ])
-
-        # Split the tags column into multiple columns based on the delimiter '|' - It is how the model can understand the tags
-        mlb = MultiLabelBinarizer()
-        data_expanded = data_expanded.join(pd.DataFrame(mlb.fit_transform(data_expanded.pop('tags').str.split('|')), columns=mlb.classes_, index=data_expanded.index))
 
         # Encode the tags
         self.tag_encoder = LabelEncoder()
-        data_expanded['tag'] = self.tag_encoder.fit_transform(data_expanded['tag'])
+
+        if not data_expanded.empty:
+            # Split the tags column into multiple columns based on the delimiter '|' - It is how the model can understand the tags
+            mlb = MultiLabelBinarizer()
+            data_expanded = data_expanded.join(pd.DataFrame(mlb.fit_transform(data_expanded.pop('tags').str.split('|')), columns=mlb.classes_, index=data_expanded.index))
+
+            data_expanded['tag'] = self.tag_encoder.fit_transform(data_expanded['tag'])
+
         self.ratings_df = data_expanded
 
         # Model based on the SVD Singular Value Decomposition algorithm

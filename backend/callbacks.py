@@ -1,34 +1,15 @@
 import pandas as pd
 import streamlit as st
 
-from backend.utils import get_top_n_categories
 from backend.models import ImageModel
 from backend.stablediffusion import StableDiffusion
 from config import config
 
 
-def find_tag_category_id(tag):
-    for i in range(1, 10):
-        filename = f"data/cat{i}.csv"
-        with open(filename, "r") as file:
-            file_content = file.read()
-            if tag in file_content:
-                return i
-
-
-def rate_callback(user_id, ratings, category_id, tags, place_id):
-    categories = []
-    for tag in tags.split('|'):
-        category_id = find_tag_category_id(tag)
-        if category_id is not None:
-            categories.append(category_id)
-    if all(cat == categories[0] for cat in categories):
-        final = str(categories[0])
-    else:
-        final = "|".join(map(str,categories))
+def rate_callback(user_id, ratings, categories, tags, place_id):
     new_row = {
         "userId": user_id,
-        "categoryId": final,
+        "categoryId": categories,
         "rating": ratings,
         "tags": tags
     }
@@ -39,7 +20,6 @@ def rate_callback(user_id, ratings, category_id, tags, place_id):
 
 def regenerate_images():
     if False not in st.session_state['is_image_rated'].values():
-        print(get_top_n_categories(3, st.session_state['current_user']))
         for i in range(9):
             st.session_state['is_image_rated'][i] = False
             st.session_state['is_image_generate'][i] = False
@@ -96,6 +76,3 @@ def next_step_selection():
         st.session_state['show_all'] = True
     else:
         st.session_state['tags_rating'] = True
-
-
-

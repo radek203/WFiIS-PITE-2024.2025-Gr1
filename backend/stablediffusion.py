@@ -21,9 +21,10 @@ class StableDiffusion:
 
     def generate_random_prompts(self):
         prompts = []
-        categories = [i for i in range(1, 10)]
+        categories = [[i,] for i in range(1, 10)]
         all_tags = [[] for _ in categories]
         for category_id in categories:
+            category_id = category_id[0]
             adjectives = self.get_random_adjectives(1)
             tags = self.get_random_tags(1, category_id)
             tag_f = adjectives.iloc[0].values[0]
@@ -38,11 +39,10 @@ class StableDiffusion:
         image = self.model.generate_image(prompt, int(steps))
         image.save("images/image" + str(img_id) + ".png")
 
-    # This function should return n (9) best prompts
     def generate_prompt_from_best_tags(self, user_id, n=9):
         scikit = sc.ScikitImpl(config['debug'])
         scikit.train()
-        tags_combinations, _, top_categories = scikit.get_top_n_ratings(user_id, n)
+        tags_combinations, top_categories = scikit.get_top_n_ratings(user_id, n)
         prompts = []
         all_tags = [[] for _ in range(n)]
         for i, tags in enumerate(tags_combinations):
@@ -57,4 +57,4 @@ class StableDiffusion:
                 all_tags[i].append(tag_s)
             prompt = prompt[:-5]
             prompts.append(prompt)
-        return prompts, all_tags, top_categories
+        return prompts, all_tags, [top_categories for _ in range(n)]

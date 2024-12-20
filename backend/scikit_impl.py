@@ -15,10 +15,6 @@ class ScikitImpl:
         # Read the ratings data
         ratings_df = pd.read_csv("data/ratings.csv")
         self.adjectives_df = pd.read_csv("data/adjectives.csv", header=None)
-        if self.debug:
-            # Display all columns in the output
-            pd.set_option('display.max_columns', None)
-            print(ratings_df)
 
         # Encode the userIds
         self.user_encoder = LabelEncoder()
@@ -103,10 +99,9 @@ class ScikitImpl:
         top_n_recommendations = sorted(predictions_cf, key=lambda x: x.est, reverse=True)[:n]
 
         if self.debug:
-            print("Top N ratings:", top_n_recommendations)
+            print(top_n_recommendations)
 
         # Decode the top tags and retrieve their predicted ratings
         top_tags = [self.tag_encoder.inverse_transform([pred.iid])[0] for pred in top_n_recommendations]
-        predicted_ratings = [pred.est for pred in top_n_recommendations]
 
-        return top_tags, predicted_ratings, top_categories
+        return top_tags, top_categories

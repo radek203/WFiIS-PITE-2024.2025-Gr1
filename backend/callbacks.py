@@ -1,28 +1,25 @@
-import pandas as pd
 import streamlit as st
 
 from backend.models import ImageModel
-from backend.scikit_impl import ScikitImpl
 from backend.stablediffusion import StableDiffusion
+from backend.utils import save_row_to_file, get_existing_users
 from config import config
 
 
-def rate_callback(user_id, ratings, category_id, tags, place_id):
-    new_row = {
-        "userId": user_id,
-        "categoryId": category_id,
-        "rating": ratings,
-        "tags": tags
-    }
+def rate_callback(ratings, img_data, place_id):
     st.session_state['is_image_rated'][place_id] = True
-    save_row_to_file(new_row)
+    save_row_to_file({
+        "id": img_data[0],
+        "userId": st.session_state['current_user'],
+        "categoryId": img_data[1],
+        "rating": ratings,
+        "tags": img_data[2]
+    })
     regenerate_images()
 
 
 def regenerate_images():
     if False not in st.session_state['is_image_rated'].values():
-        calculate_ratings(st.session_state['current_user'])
-        print(get_top_n_categories(3, st.session_state['current_user']))
         for i in range(9):
             st.session_state['is_image_rated'][i] = False
             st.session_state['is_image_generate'][i] = False
@@ -30,37 +27,13 @@ def regenerate_images():
         st.session_state['decision_buttons'] = True
 
 
-def save_row_to_file(new_row):
-    data = pd.read_csv("data/ratings.csv")
-    new_row_df = pd.DataFrame([new_row], columns=data.columns)
-    updated_data = pd.concat([data, new_row_df], ignore_index=True)
-    updated_data.to_csv("data/ratings.csv", index=False)
-
-
-def get_number_of_rows():
-    data = pd.read_csv("data/ratings.csv")
-    return data.shape[0]
-
-
-def get_existing_users():
-    data = pd.read_csv("data/ratings.csv")
-    return data.userId.unique()
-
-
 def change_user_callback():
     selected_user = st.session_state["user_selection"]
-    if selected_user == "Create New User (Last Id + 1)":
+    if selected_user == "Create New User":
         existing_users = get_existing_users()
         selected_user = 1 if len(existing_users) == 0 else (int(existing_users[-1]) + 1)
     st.session_state['current_user'] = int(selected_user)
     print("Selected user:", selected_user)
-
-
-def calculate_ratings(user_id):
-    scikit = ScikitImpl(config['debug'])
-    scikit.train()
-    ids, ratings = scikit.get_top_n_ratings(user_id, 3)
-    print(f"IDs: {ids}", f"Ratings: {ratings}")
 
 
 def change_model_callback(layout):
@@ -77,21 +50,16 @@ def change_steps_callback():
     print("Steps:", steps)
 
 
-def next_step_selection():
+def next_step_selection_callback():
     next_step = st.session_state['next_step_selection']
     st.session_state['decision_buttons'] = False
+    st.session_state['categories_rating'] = False
     st.session_state['tags_rating'] = False
+    st.session_state['random_tags_rating'] = False
     st.session_state['show_all'] = False
     if next_step.startswith("Show"):
         st.session_state['show_all'] = True
+    elif next_step.startswith("Generate random"):
+        st.session_state['random_tags_rating'] = True
     else:
         st.session_state['tags_rating'] = True
-
-
-def get_top_n_categories(n, user_id):
-    data = pd.read_csv("data/ratings.csv")
-    specific_user_data = data[data["userId"] == user_id]
-    specific_user_data = specific_user_data[~specific_user_data["categoryId"].str.contains(r'\|', na=False)]
-    category_sum = specific_user_data.groupby("categoryId")["rating"].sum().reset_index()
-    top_category = category_sum.sort_values(by="rating", ascending=False).head(n)
-    return top_category

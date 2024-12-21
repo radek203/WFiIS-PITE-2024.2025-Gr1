@@ -1,6 +1,7 @@
 import pandas as pd
 
 import backend.scikit_impl as sc
+from backend.utils import get_top_n_categories
 from config import config
 
 
@@ -53,6 +54,24 @@ class StableDiffusion:
             for j, tag in enumerate(tags):
                 tag_f = adjectives.iloc[j].values[0]
                 tag_s = tag
+                prompt += tag_f + " " + tag_s + " and "
+                all_tags[i].append(tag_f)
+                all_tags[i].append(tag_s)
+            prompt = prompt[:-5]
+            prompts.append(prompt)
+        return prompts, all_tags, [top_categories for _ in range(n)]
+
+    def generate_random_prompts_from_best_categories(self, user_id, n=9):
+        top_categories = sorted(get_top_n_categories(3, user_id)['categoryId'].tolist())
+        prompts = []
+        all_tags = [[] for _ in range(n)]
+        for i in range(n):
+            prompt = ""
+            adjectives = self.get_random_adjectives(3)
+            for j in range(3):
+                tags = self.get_random_tags(1, int(top_categories[j]))
+                tag_f = adjectives.iloc[j].values[0]
+                tag_s = tags.iloc[0].values[0]
                 prompt += tag_f + " " + tag_s + " and "
                 all_tags[i].append(tag_f)
                 all_tags[i].append(tag_s)

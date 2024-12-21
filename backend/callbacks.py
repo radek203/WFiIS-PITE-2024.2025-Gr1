@@ -53,9 +53,13 @@ def change_steps_callback():
 def next_step_selection_callback():
     next_step = st.session_state['next_step_selection']
     st.session_state['decision_buttons'] = False
+    st.session_state['categories_rating'] = False
     st.session_state['tags_rating'] = False
+    st.session_state['random_tags_rating'] = False
     st.session_state['show_all'] = False
     if next_step.startswith("Show"):
         st.session_state['show_all'] = True
+    elif next_step.startswith("Generate random"):
+        st.session_state['random_tags_rating'] = True
     else:
         st.session_state['tags_rating'] = True

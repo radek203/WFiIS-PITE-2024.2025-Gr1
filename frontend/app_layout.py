@@ -25,7 +25,9 @@ class App:
     st.session_state['steps'] = 0
     st.session_state['model'] = None
     st.session_state['decision_buttons'] = False
+    st.session_state['categories_rating'] = True
     st.session_state['tags_rating'] = False
+    st.session_state['random_tags_rating'] = False
     st.session_state['show_all'] = False
 
     def __init__(self):
@@ -64,7 +66,7 @@ class App:
         elif st.session_state['steps'] == 0:
             box.number_input("Number of steps", key="steps_input", min_value=0, step=1, on_change=cb.change_steps_callback)
         elif st.session_state['decision_buttons']:
-            box.selectbox("Select next step", ["", "Generate more images to rate categories", "Go to generating images based on tags from best rated categories only", "Show all generated images"], key="next_step_selection", on_change=cb.next_step_selection_callback)
+            box.selectbox("Select next step", ["", "Generate more images to rate categories", "Generate random images from best rated categories only", "Generate images based on tags from best rated categories only", "Show all generated images"], key="next_step_selection", on_change=cb.next_step_selection_callback)
         elif st.session_state['show_all']:
             images_box = box.container(border=True)
             row = images_box.columns(3)
@@ -80,9 +82,15 @@ class App:
             row1 = images_box.columns(3)
             row2 = images_box.columns(3)
             row3 = images_box.columns(3)
+            prompts, tags, categories = [], [], []
             if st.session_state['tags_rating']:
                 prompts, tags, categories = st.session_state['image_generator'].generate_prompt_from_best_tags(st.session_state['current_user'])
-            else:
+            elif st.session_state['random_tags_rating']:
+                prompts, tags, categories = st.session_state['image_generator'].generate_random_prompts_from_best_categories(st.session_state['current_user'])
+            elif st.session_state['categories_rating']:
                 prompts, tags, categories = st.session_state['image_generator'].generate_random_prompts()
+            st.session_state['tags_rating'] = False
+            st.session_state['random_tags_rating'] = False
+            st.session_state['categories_rating'] = False
             display_components(row1 + row2 + row3, self.create_image_container, prompts, tags, categories)
             display_components(row1 + row2 + row3, self.create_rating_component, [], [], [])

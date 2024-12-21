@@ -1,6 +1,6 @@
 ### This project is only compatible with Windows and graphics card with CUDA support.
 ### Recommended minimum specs: 32GB RAM, 8GB VRAM
-#### Tested on NVIDIA GeForce RTX 4070, 64GB RAM, using SD35LT model (and 35 steps) - average time of generating 1 image is around 30 seconds.
+#### Tested on NVIDIA GeForce RTX 4070, 64GB RAM, using SD35LT model (and 35 steps (10 should be enough)) - average time of generating 1 image is around 30 seconds.
 ### Project is created using Python 3.12.7, and you need to have it installed on your machine.
 #### Newer versions of Python might not work with dependencies. You need to check it by yourself.
 #### Please run project using administrator privileges and without any virtual environments, and close all other streamlit web tabs before running the app.

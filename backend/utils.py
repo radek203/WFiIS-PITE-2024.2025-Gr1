@@ -10,6 +10,19 @@ def get_top_n_categories(n, user_id):
     return top_category
 
 
+def get_tags_ratings():
+    ratings_df = pd.read_csv("data/ratings.csv")
+    adjectives_df = pd.read_csv("data/adjectives.csv", header=None)
+    return [{"userId": row.userId, "tag": remove_tag(adjectives_df, row.tags), "rating": row.rating, "tags": remove_tag(adjectives_df, row.tags)}
+        for _, row in ratings_df.iterrows()
+        if '|' in str(row.categoryId)]
+
+
+def remove_tag(adjectives_df, tags):
+    filtered_list = [tag for tag in tags.split('|') if tag not in adjectives_df[0].tolist()]
+    return '|'.join(filtered_list)
+
+
 def get_user_images(user_id):
     data = pd.read_csv("data/ratings.csv")
     specific_user_data = data[data["userId"] == user_id]

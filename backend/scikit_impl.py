@@ -5,37 +5,28 @@ from surprise import Dataset, Reader
 from surprise import SVD
 from surprise import accuracy
 
-from backend.utils import get_top_n_categories
+from backend.utils import get_top_n_categories, get_tags_ratings
 
 
 class ScikitImpl:
 
     def __init__(self, debug=False):
         self.debug = debug
-        # Read the ratings data
-        ratings_df = pd.read_csv("data/ratings.csv")
-        self.adjectives_df = pd.read_csv("data/adjectives.csv", header=None)
+
+        # Process only ratings with multiple categories
+        data_expanded = pd.DataFrame(get_tags_ratings())
 
         # Encode the userIds
         self.user_encoder = LabelEncoder()
-        ratings_df['userId'] = self.user_encoder.fit_transform(ratings_df['userId'])
+        data_expanded['userId'] = self.user_encoder.fit_transform(data_expanded['userId'])
 
-        # Process only ratings with multiple categories
-        data_expanded = pd.DataFrame([
-            {"userId": row.userId, "tag": self.remove_tag(row.tags), "rating": row.rating, "tags": self.remove_tag(row.tags)}
-            for _, row in ratings_df.iterrows()
-            if '|' in str(row.categoryId)
-        ])
+        # Split the tags column into multiple columns based on the delimiter '|' - It is how the model can understand the tags
+        mlb = MultiLabelBinarizer()
+        data_expanded = data_expanded.join(pd.DataFrame(mlb.fit_transform(data_expanded.pop('tags').str.split('|')), columns=mlb.classes_, index=data_expanded.index))
 
         # Encode the tags
         self.tag_encoder = LabelEncoder()
-
-        if not data_expanded.empty:
-            # Split the tags column into multiple columns based on the delimiter '|' - It is how the model can understand the tags
-            mlb = MultiLabelBinarizer()
-            data_expanded = data_expanded.join(pd.DataFrame(mlb.fit_transform(data_expanded.pop('tags').str.split('|')), columns=mlb.classes_, index=data_expanded.index))
-
-            data_expanded['tag'] = self.tag_encoder.fit_transform(data_expanded['tag'])
+        data_expanded['tag'] = self.tag_encoder.fit_transform(data_expanded['tag'])
 
         self.ratings_df = data_expanded
 
@@ -45,10 +36,6 @@ class ScikitImpl:
         # another model - worse RMSE
         # model_knn = KNNBasic()
         # model_knn.fit(trainset)
-
-    def remove_tag(self, tags):
-        filtered_list = [tag for tag in tags.split('|') if tag not in self.adjectives_df[0].tolist()]
-        return '|'.join(filtered_list)
 
     def train(self):
         # 80% training, 20% testing - To learn the model and test it

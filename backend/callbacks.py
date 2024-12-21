@@ -57,9 +57,11 @@ def next_step_selection_callback():
     st.session_state['tags_rating'] = False
     st.session_state['random_tags_rating'] = False
     st.session_state['show_all'] = False
-    if next_step.startswith("Show"):
-        st.session_state['show_all'] = True
+    if next_step.startswith("Generate more"):
+        st.session_state['categories_rating'] = True
     elif next_step.startswith("Generate random"):
         st.session_state['random_tags_rating'] = True
-    else:
+    elif next_step.startswith("Generate images"):
         st.session_state['tags_rating'] = True
+    else:
+        st.session_state['show_all'] = True

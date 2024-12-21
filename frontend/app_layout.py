@@ -3,7 +3,7 @@ import os
 import streamlit as st
 
 import backend.callbacks as cb
-from backend.utils import get_number_of_rows, get_user_images
+from backend.utils import get_number_of_rows, get_user_images, get_tags_ratings
 
 
 def display_components(rows, method, prompts, tags, categories):
@@ -66,7 +66,10 @@ class App:
         elif st.session_state['steps'] == 0:
             box.number_input("Number of steps", key="steps_input", min_value=0, step=1, on_change=cb.change_steps_callback)
         elif st.session_state['decision_buttons']:
-            box.selectbox("Select next step", ["", "Generate more images to rate categories", "Generate random images from best rated categories only", "Generate images based on tags from best rated categories only", "Show all generated images"], key="next_step_selection", on_change=cb.next_step_selection_callback)
+            options = ["", "Generate more images to rate categories", "Generate random images from best rated categories only", "Generate images based on tags from best rated categories only", "Show all generated images"]
+            if len(get_tags_ratings()) == 0:
+                options.pop(3)
+            box.selectbox("Select next step", options, key="next_step_selection", on_change=cb.next_step_selection_callback)
         elif st.session_state['show_all']:
             images_box = box.container(border=True)
             row = images_box.columns(3)

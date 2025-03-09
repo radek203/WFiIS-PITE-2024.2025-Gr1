@@ -1,3 +1,9 @@
+## Project Goal
+The goal of the project is to create an application that uses artificial intelligence models, such as Stable Diffusion, to generate images and implement a personalization mechanism using the scikit-surprise library. The application allows users to rate the generated images, enabling subsequent image generations to align with their individual preferences. Data related to ratings and image generations is managed using the NumPy library, which ensures efficient storage and retrieval of information, facilitating the smooth operation of the application. Additionally, to provide an intuitive and convenient user interaction experience, the graphical interface was developed using the Streamlit library. The combination of these technologies delivers personalized visual experiences in a user-friendly environment.
+
+![image8](https://github.com/user-attachments/assets/9e83d303-9a6e-4d01-b73c-239728419f74)
+
+
 ### This project is only compatible with Windows and graphics card with CUDA support.
 ### Recommended minimum specs: 32GB RAM, 8GB VRAM
 #### Tested on NVIDIA GeForce RTX 4070, 64GB RAM, using SD35LT model (and 35 steps (10 should be enough)) - average time of generating 1 image is around 30 seconds.
